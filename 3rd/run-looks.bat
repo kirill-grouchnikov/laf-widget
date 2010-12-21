@@ -1,0 +1,1 @@
+"C:\Program Files\Java\jdk1.5.0_11\/bin/java" -Dswing.defaultlaf=com.jgoodies.looks.plastic.PlasticXPLookAndFeel -cp ../drop/laf-widget-tst.jar;../drop/laf-widget.jar;augmented/looks-2.1.3.jar test.check.SampleFrame

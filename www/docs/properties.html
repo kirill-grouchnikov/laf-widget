@@ -1,0 +1,353 @@
+<html>
+<head>
+<title>Laf-Widget - available properties</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body bgcolor="#FFFFFF" text="#000000">
+
+<h1>Laf-Widget - available properties</h1>
+<table border="0" cellpadding="10" cellspacing="0" width="100%">
+  <tr>
+    <td colspan="2">
+      <h2>Client properties</h2>
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="left"><code><b><font color="darkblue">LafWidget. ANIMATION_KIND</font></b></code>
+      <br>since version 1.0
+    </td>
+    <td width="80%" valign="top">
+Specifies the speed of the animation effects on a particular component. 
+The value should one of the <font color="darkblue">org.jvnet.lafwidget.utils.AnimationKind</font>
+enum values and can be set on a component, one of its ancestors or globally on <b>UIManager</b> table.
+The default value is <font color="darkblue">AnimationKind.REGULAR</font>.
+Example of creating four buttons with different animation speed:<br><br>
+
+    <code>
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">JButton&nbsp;bNoAnimation&nbsp;=&nbsp;</font><font color="#7f0055"><b>new&nbsp;</b></font><font color="#000000">JButton</font><font color="#000000">(</font><font color="#2a00ff">&#34;No&nbsp;animation&#34;</font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">bNoAnimation.putClientProperty</font><font color="#000000">(</font><font color="#000000">LafWidget.ANIMATION_KIND,</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">AnimationKind.NONE</font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">JButton&nbsp;bFastAnimation&nbsp;=&nbsp;</font><font color="#7f0055"><b>new&nbsp;</b></font><font color="#000000">JButton</font><font color="#000000">(</font><font color="#2a00ff">&#34;Fast&nbsp;animation&#34;</font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">bFastAnimation.putClientProperty</font><font color="#000000">(</font><font color="#000000">LafWidget.ANIMATION_KIND,</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">AnimationKind.FAST</font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">JButton&nbsp;bRegularAnimation&nbsp;=&nbsp;</font><font color="#7f0055"><b>new&nbsp;</b></font><font color="#000000">JButton</font><font color="#000000">(</font><font color="#2a00ff">&#34;Regular&nbsp;animation&#34;</font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">bRegularAnimation.putClientProperty</font><font color="#000000">(</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">LafWidget.ANIMATION_KIND,&nbsp;AnimationKind.REGULAR</font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">JButton&nbsp;bSlowAnimation&nbsp;=&nbsp;</font><font color="#7f0055"><b>new&nbsp;</b></font><font color="#000000">JButton</font><font color="#000000">(</font><font color="#2a00ff">&#34;Slow&nbsp;animation&#34;</font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">bSlowAnimation.putClientProperty</font><font color="#000000">(</font><font color="#000000">LafWidget.ANIMATION_KIND,</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">AnimationKind.SLOW</font><font color="#000000">)</font><font color="#000000">;</font></code>
+    
+
+        </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="left"><code><b><font color="darkblue">LafWidget. COMBO_BOX_USE_MODEL_ONLY</font></b></code>
+      <br>since version 1.0
+    </td>
+    <td width="80%" valign="top">
+Specifies that the editable combobox should not allow typing a value that is
+not present in the combobox model. The value should be either <b>Boolean.TRUE</b> or <b>Boolean.FALSE</b>.
+At runtime, the value is taken from:
+<ul>
+<li>The combobox itself.
+<li>The <b>UIManager</b> table.
+</ul>
+If this property is not specified anywhere, the editable combobox allows typing a value that is
+not present in the combobox model. For example,<br><br>
+    <code>
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">JComboBox&nbsp;comboCompletionModelOnlyTest&nbsp;=&nbsp;</font><font color="#7f0055"><b>new&nbsp;</b></font><font color="#000000">JComboBox</font><font color="#000000">(</font><br/>
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>new&nbsp;</b></font><font color="#000000">Object</font><font color="#000000">[]&nbsp;{&nbsp;</font><font color="#2a00ff">&#34;Ester&#34;</font><font color="#000000">,&nbsp;</font><font color="#2a00ff">&#34;Jordi&#34;</font><font color="#000000">,&nbsp;</font><font color="#2a00ff">&#34;Jordina&#34;</font><font color="#000000">,&nbsp;</font><font color="#2a00ff">&#34;Jorge&#34;</font><font color="#000000">,&nbsp;</font><font color="#2a00ff">&#34;Sergi&#34;&nbsp;</font><font color="#000000">})</font><font color="#000000">;</font><br/>
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">comboCompletionModelOnlyTest.setEditable</font><font color="#000000">(</font><font color="#7f0055"><b>true</b></font><font color="#000000">)</font><font color="#000000">;</font><br/>
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">comboCompletionModelOnlyTest.putClientProperty</font><font color="#000000">(</font><br/>
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">LafWidget.COMBO_BOX_USE_MODEL_ONLY,&nbsp;Boolean.TRUE</font><font color="#000000">)</font><font color="#000000">;</font></code>
+<br><img src="../images/widgets/lock-combobox.png" width="271" height="55">
+<img src="../images/widgets/combobox-auto-completion.png" width="102" height="114">
+        </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="left"><code><b><font color="darkblue">LafWidget. PASSWORD_STRENGTH_CHECKER</font></b></code>
+      <br>since version 1.0
+    </td>
+    <td width="80%" valign="top">
+Specifies the custom password strength checker on a <b>JPasswordField</b>. Should be set on the specific
+<b>JPasswordField</b>. The value should be an instance of a class that implements the
+<font color="darkblue">org.jvnet.lafwidget.text.PasswordStrengthChecker</font> interface.
+Sample custom implementation:
+<br><br>
+    <code>
+<font color="#ffffff"></font><font color="#000000">jpf.putClientProperty</font><font color="#000000">(</font><font color="#000000">LafWidget.PASSWORD_STRENGTH_CHECKER,</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>new&nbsp;</b></font><font color="#000000">PasswordStrengthChecker</font><font color="#000000">()&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font color="#000000">PasswordStrength&nbsp;getStrength</font><font color="#000000">(</font><font color="#7f0055"><b>char</b></font><font color="#000000">[]&nbsp;</font><font color="#000000">password</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>if&nbsp;</b></font><font color="#000000">(</font><font color="#000000">password&nbsp;==&nbsp;</font><font color="#7f0055"><b>null</b></font><font color="#000000">)</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>return&nbsp;</b></font><font color="#000000">PasswordStrength.WEAK;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>int&nbsp;</b></font><font color="#000000">length&nbsp;=&nbsp;password.length;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>if&nbsp;</b></font><font color="#000000">(</font><font color="#000000">length&nbsp;&lt;&nbsp;</font><font color="#990000">3</font><font color="#000000">)</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>return&nbsp;</b></font><font color="#000000">PasswordStrength.WEAK;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>if&nbsp;</b></font><font color="#000000">(</font><font color="#000000">length&nbsp;&lt;&nbsp;</font><font color="#990000">6</font><font color="#000000">)</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>return&nbsp;</b></font><font color="#000000">PasswordStrength.MEDIUM;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>return&nbsp;</b></font><font color="#000000">PasswordStrength.STRONG;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font color="#000000">String&nbsp;getDescription</font><font color="#000000">(</font><font color="#000000">PasswordStrength&nbsp;strength</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>if&nbsp;</b></font><font color="#000000">(</font><font color="#000000">strength&nbsp;==&nbsp;PasswordStrength.WEAK</font><font color="#000000">)</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>return&nbsp;</b></font><font color="#2a00ff">&#34;&lt;html&gt;This&nbsp;password&nbsp;is&nbsp;&lt;b&gt;way&lt;/b&gt;&nbsp;too&nbsp;weak&lt;/html&gt;&#34;</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>if&nbsp;</b></font><font color="#000000">(</font><font color="#000000">strength&nbsp;==&nbsp;PasswordStrength.MEDIUM</font><font color="#000000">)</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>return&nbsp;</b></font><font color="#2a00ff">&#34;&lt;html&gt;Come&nbsp;on,&nbsp;you&nbsp;can&nbsp;do&lt;br&gt;&nbsp;a&nbsp;little&nbsp;better&nbsp;than&nbsp;that&lt;/html&gt;&#34;</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>if&nbsp;</b></font><font color="#000000">(</font><font color="#000000">strength&nbsp;==&nbsp;PasswordStrength.STRONG</font><font color="#000000">)</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>return&nbsp;</b></font><font color="#2a00ff">&#34;OK&#34;</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>return&nbsp;null</b></font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">})</font><font color="#000000">;</font></code>
+    <br><br>And the result is:
+<br><img src="../images/widgets/password-strength-weak.png" width="250" height="48">
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="left"><code><b><font color="darkblue">LafWidget. TABBED_PANE_ PREVIEW_PAINTER</font></b></code>
+      <br>since version 1.0
+    </td>
+    <td width="80%" valign="top">
+The <font color="darkblue">org.jvnet.lafwidget.tabbed.TabPreviewPainter</font>
+    class provides an option to have a tab overview button. The
+    <font color="darkblue">org.jvnet.lafwidget.tabbed.DefaultTabPreviewPainter</font> provides a default
+    implementation of this abstract class. In order to set the tab preview painter, use client property
+    <font color="darkblue">LafWidget.TABBED_PANE_PREVIEW_PAINTER</font> on either tabbed pane
+    or globally on UIManager. Value should be an instance of the above class. Once this property is
+    set, the tabbed pane will show an overview button (situated according to the tab placement). Shown below
+    is the tab with tab overview button on TOP and BOTTOM placement:
+    <br><br>
+    <img src="../images/widgets/tab-overview-button-top.png" width="188" height="56">
+    <img src="../images/widgets/tab-overview-button-bottom.png" width="188" height="56">
+    <br><br>
+    When the tab overview button is clicked, the tab overview dialog is shown and
+    a separate thread starts populating this dialog with preview thumbnails of all
+    the tab components:
+    <br><br>
+    <img src="../images/widgets/tab-overview-dialog.png" width="392" height="437">
+    <br><br>
+    Clicking on a tab thumbnail closes the tab overview dialog and selects the
+    matching tab component. Basic rollover effects and tooltip messages are provided
+    on the tab overview widgets.
+
+    <br><br>
+    In addition, this property can enable a tab preview window that will be shown when the mouse
+    hovers over a tab. The tabbed pane will show preview window of the tab under mouse
+    (aligned according to the tab placement):
+    <br><br>
+    <img src="../images/widgets/tab-preview-window.png" width="442" height="177">
+    <br><br>
+    
+    The screenshots above are from a tabbed pane that has the client property set to:
+    <br><br>
+    <code>
+<font color="#ffffff"></font><font color="#000000">jtp.putClientProperty</font><font color="#000000">(</font><font color="#000000">LafWidget.TABBED_PANE_PREVIEW_PAINTER,</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>new&nbsp;</b></font><font color="#000000">DefaultTabPreviewPainter</font><font color="#000000">())</font><font color="#000000">;</font></code>
+    <br><br>
+    where <font color="darkblue">org.jvnet.lafwidget.tabbed.DefaultTabPreviewPainter</font> is 
+    the default (reference) implementation:
+    <br><br>
+    <code>
+<font color="#7f0055"><b>public&nbsp;class&nbsp;</b></font><font color="#000000">DefaultTabPreviewPainter&nbsp;</font><font color="#7f0055"><b>extends&nbsp;</b></font><font color="#000000">TabPreviewPainter&nbsp;</font><font color="#000000">{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font color="#7f0055"><b>boolean&nbsp;</b></font><font color="#000000">hasPreview</font><font color="#000000">(</font><font color="#000000">JTabbedPane&nbsp;tabPane,&nbsp;</font><font color="#7f0055"><b>int&nbsp;</b></font><font color="#000000">tabIndex</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>return&nbsp;</b></font><font color="#000000">(</font><font color="#000000">tabPane.getComponentAt</font><font color="#000000">(</font><font color="#000000">tabIndex</font><font color="#000000">)&nbsp;</font><font color="#000000">!=&nbsp;</font><font color="#7f0055"><b>null</b></font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">previewTab</font><font color="#000000">(</font><font color="#000000">JTabbedPane&nbsp;tabPane,&nbsp;</font><font color="#7f0055"><b>int&nbsp;</b></font><font color="#000000">tabIndex,&nbsp;Graphics&nbsp;g,</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>int&nbsp;</b></font><font color="#000000">x,&nbsp;</font><font color="#7f0055"><b>int&nbsp;</b></font><font color="#000000">y,&nbsp;</font><font color="#7f0055"><b>int&nbsp;</b></font><font color="#000000">w,&nbsp;</font><font color="#7f0055"><b>int&nbsp;</b></font><font color="#000000">h</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">Component&nbsp;tabComponent&nbsp;=&nbsp;tabPane.getComponentAt</font><font color="#000000">(</font><font color="#000000">tabIndex</font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>if&nbsp;</b></font><font color="#000000">(</font><font color="#000000">tabComponent&nbsp;==&nbsp;</font><font color="#7f0055"><b>null</b></font><font color="#000000">)</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>return</b></font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;if&nbsp;(!tabComponent.isShowing())</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;return;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>int&nbsp;</b></font><font color="#000000">compWidth&nbsp;=&nbsp;tabComponent.getWidth</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>int&nbsp;</b></font><font color="#000000">compHeight&nbsp;=&nbsp;tabComponent.getHeight</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>if&nbsp;</b></font><font color="#000000">((</font><font color="#000000">compWidth&nbsp;&gt;&nbsp;</font><font color="#990000">0</font><font color="#000000">)&nbsp;</font><font color="#000000">&amp;&amp;&nbsp;</font><font color="#000000">(</font><font color="#000000">compHeight&nbsp;&gt;&nbsp;</font><font color="#990000">0</font><font color="#000000">))&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;draw&nbsp;tab&nbsp;component</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">BufferedImage&nbsp;tempCanvas&nbsp;=&nbsp;</font><font color="#7f0055"><b>new&nbsp;</b></font><font color="#000000">BufferedImage</font><font color="#000000">(</font><font color="#000000">compWidth,&nbsp;compHeight,</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">BufferedImage.TYPE_INT_ARGB</font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">Graphics&nbsp;tempCanvasGraphics&nbsp;=&nbsp;tempCanvas.getGraphics</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">tabComponent.paint</font><font color="#000000">(</font><font color="#000000">tempCanvasGraphics</font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;check&nbsp;if&nbsp;need&nbsp;to&nbsp;scale&nbsp;down</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>double&nbsp;</b></font><font color="#000000">coef&nbsp;=&nbsp;Math.min</font><font color="#000000">((</font><font color="#7f0055"><b>double</b></font><font color="#000000">)&nbsp;</font><font color="#000000">w&nbsp;/&nbsp;</font><font color="#000000">(</font><font color="#7f0055"><b>double</b></font><font color="#000000">)&nbsp;</font><font color="#000000">compWidth,&nbsp;</font><font color="#000000">(</font><font color="#7f0055"><b>double</b></font><font color="#000000">)&nbsp;</font><font color="#000000">h</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">/&nbsp;</font><font color="#000000">(</font><font color="#7f0055"><b>double</b></font><font color="#000000">)&nbsp;</font><font color="#000000">compHeight</font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>if&nbsp;</b></font><font color="#000000">(</font><font color="#000000">coef&nbsp;&lt;&nbsp;</font><font color="#990000">1.0</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>int&nbsp;</b></font><font color="#000000">sdWidth&nbsp;=&nbsp;</font><font color="#000000">(</font><font color="#7f0055"><b>int</b></font><font color="#000000">)&nbsp;(</font><font color="#000000">coef&nbsp;*&nbsp;compWidth</font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>int&nbsp;</b></font><font color="#000000">sdHeight&nbsp;=&nbsp;</font><font color="#000000">(</font><font color="#7f0055"><b>int</b></font><font color="#000000">)&nbsp;(</font><font color="#000000">coef&nbsp;*&nbsp;compHeight</font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>int&nbsp;</b></font><font color="#000000">dx&nbsp;=&nbsp;</font><font color="#000000">(</font><font color="#000000">w&nbsp;-&nbsp;sdWidth</font><font color="#000000">)&nbsp;</font><font color="#000000">/&nbsp;</font><font color="#990000">2</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>int&nbsp;</b></font><font color="#000000">dy&nbsp;=&nbsp;</font><font color="#000000">(</font><font color="#000000">h&nbsp;-&nbsp;sdHeight</font><font color="#000000">)&nbsp;</font><font color="#000000">/&nbsp;</font><font color="#990000">2</font><font color="#000000">;</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">g.drawImage</font><font color="#000000">(</font><font color="#000000">LafWidgetUtilities.createThumbnail</font><font color="#000000">(</font><font color="#000000">tempCanvas,</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">sdWidth</font><font color="#000000">)</font><font color="#000000">,&nbsp;dx,&nbsp;dy,&nbsp;</font><font color="#7f0055"><b>null</b></font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">}&nbsp;</font><font color="#7f0055"><b>else&nbsp;</b></font><font color="#000000">{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;System.out.println(&#34;Putting&nbsp;&#34;&nbsp;+&nbsp;frame.hashCode()&nbsp;+&nbsp;&#34;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;-&gt;&nbsp;&#34;&nbsp;+&nbsp;snapshot.hashCode());</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">g.drawImage</font><font color="#000000">(</font><font color="#000000">tempCanvas,&nbsp;</font><font color="#990000">0</font><font color="#000000">,&nbsp;</font><font color="#990000">0</font><font color="#000000">,&nbsp;</font><font color="#7f0055"><b>null</b></font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font color="#7f0055"><b>boolean&nbsp;</b></font><font color="#000000">hasPreviewWindow</font><font color="#000000">(</font><font color="#000000">JTabbedPane&nbsp;tabPane,&nbsp;</font><font color="#7f0055"><b>int&nbsp;</b></font><font color="#000000">tabIndex</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>return&nbsp;true</b></font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font color="#7f0055"><b>boolean&nbsp;</b></font><font color="#000000">hasOverviewDialog</font><font color="#000000">(</font><font color="#000000">JTabbedPane&nbsp;tabPane</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>return&nbsp;true</b></font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#000000">}</font></code>
+    <br><br>
+    Sample implementation that specifies tab overview that is updated periodically
+    (every 3 seconds):
+    <br><br>
+    <code>
+<font color="#000000">jtp.putClientProperty</font><font color="#000000">(</font><font color="#000000">LafWidget.TABBED_PANE_PREVIEW_PAINTER,</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>new&nbsp;</b></font><font color="#000000">DefaultTabPreviewPainter</font><font color="#000000">()&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#646464">@Override</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font color="#7f0055"><b>boolean&nbsp;</b></font><font color="#000000">toUpdatePeriodically</font><font color="#000000">(</font><font color="#000000">JTabbedPane&nbsp;tabPane</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>return&nbsp;true</b></font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#646464">@Override</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font color="#7f0055"><b>int&nbsp;</b></font><font color="#000000">getUpdateCycle</font><font color="#000000">(</font><font color="#000000">JTabbedPane&nbsp;tabPane</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>return&nbsp;</b></font><font color="#990000">3000</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">})</font><font color="#000000">;</font></code>
+        </td>
+  </tr>
+
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="left"><code><b><font color="darkblue">LafWidget. TEXT_SELECT_ON_FOCUS</font></b></code>
+      <br>since version 1.0
+    </td>
+    <td width="80%" valign="top">
+Specifies that a text component should select all its contents on focus gain.
+The value should be either <font color="darkblue">Boolean.TRUE</font> (behaviour present)
+or <font color="darkblue">Boolean.FALSE</font> and can be set either on a specific
+text component or globally on <b>UIManager</b>.
+Example of creating a text field that selects all its contents on focus gain:<br><br>
+    <code>
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">JTextField&nbsp;jtf4&nbsp;=&nbsp;</font><font color="#7f0055"><b>new&nbsp;</b></font><font color="#000000">JTextField</font><font color="#000000">(</font><font color="#2a00ff">&#34;select&nbsp;all&nbsp;on&nbsp;focus&#34;</font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">jtf4.setColumns</font><font color="#000000">(</font><font color="#990000">20</font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">jtf4.putClientProperty</font><font color="#000000">(</font><font color="#000000">LafWidget.TEXT_SELECT_ON_FOCUS,&nbsp;Boolean.TRUE</font><font color="#000000">)</font><font color="#000000">;</font></code>
+<br><br>
+The result is:<br><br>
+<img src="../images/widgets/text-selectall-on-focus.png" width=169 height=46>    
+        </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="left"><code><b><font color="darkblue">LafWidget. TEXT_EDIT_CONTEXT_MENU</font></b></code>
+      <br>since version 1.0
+    </td>
+    <td width="80%" valign="top">
+Specifies that a text component should have edit context menu. The value should 
+be either <font color="darkblue">Boolean.TRUE</font> (behaviour present)
+or <font color="darkblue">Boolean.FALSE</font> and can be set either on a specific
+text component or globally on <b>UIManager</b>. Example of creating a text field
+with edit context menu:<br><br>
+
+    <code>
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">JTextField&nbsp;jtf5&nbsp;=&nbsp;</font><font color="#7f0055"><b>new&nbsp;</b></font><font color="#000000">JTextField</font><font color="#000000">(</font><font color="#2a00ff">&#34;edit&nbsp;context&nbsp;menu&#34;</font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">jtf5.setColumns</font><font color="#000000">(</font><font color="#990000">20</font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">jtf5.putClientProperty</font><font color="#000000">(</font><font color="#000000">LafWidget.TEXT_EDIT_CONTEXT_MENU,&nbsp;Boolean.TRUE</font><font color="#000000">)</font><font color="#000000">;</font></code>
+<br><br>
+
+The result is:<br><br>        
+<img src="../images/widgets/text-edit-context-menu.png" width=345 height=123>    
+
+        </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="left"><code><b><font color="darkblue">LafWidget. TREE_AUTO_DND_SUPPORT</font></b></code>
+      <br>since version 1.0
+    </td>
+    <td width="80%" valign="top">
+Specifies that a tree should provide automatic drag-n-drop (DnD) support. The value should 
+be either <font color="darkblue">Boolean.TRUE</font> (behaviour present)
+or <font color="darkblue">Boolean.FALSE</font> and can be set either on a specific
+tree or globally on <b>UIManager</b>. Example of creating a tree
+with automatic DnD support:<br><br>
+
+    <code>
+<font color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;tree.putClientProperty</font><font color="#000000">(</font><font color="#000000">LafWidget.TREE_AUTO_DND_SUPPORT,</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">Boolean.TRUE</font><font color="#000000">)</font><font color="#000000">;</font></code>
+
+<br><br>
+
+The result is - the first screenshot shows the drop enabled (gson21 is being dragged), while
+the second screenshot shows the drop disabled (gson11 is being dragged under one of its children):<br><br>        
+<img src="../images/widgets/tree-dnd1.png" width=133 height=166>    
+<img src="../images/widgets/tree-dnd2.png" width=133 height=166>    
+
+        </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+
+</table>
+
+</body>
+</html>
+

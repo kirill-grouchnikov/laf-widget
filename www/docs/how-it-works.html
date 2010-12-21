@@ -1,0 +1,215 @@
+<html>
+<head>
+<title>Laf-Widget : How It Works</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body bgcolor="#FFFFFF" text="#000000">
+<h1>How it works</h1>
+
+<h2>Delegate augmentation</h2>
+If you need to debug a look-and-feel that has been <a href="how-to-change-existing-laf.html">augmented</a>
+automatically, you need to be aware of the naming convention of the augmented code. The
+<b>delegate augmentation</b> takes an existing look-and-feel UI delegate class and changes
+it in the following way:
+<ul>
+<li>If the class has <b>lafWidgets</b> member (no matter of which type), the
+augmentation is cancelled and the class remains intact.
+<li>A new member is added to the class. The member definition is <b>protected Set lafWidgets</b>.
+This set will be populated at runtime (in the <b>installUI</b> method) with the relevant
+widgets.
+<li>Each overriding <b>install / uninstall</b> method (at most eight) is renamed (the logic
+inside the original method is preserved). The naming convention prepends the fully-qualified
+class name to the method name (this is to prevent name collisions for inner-LAF extending UI delegates
+- see example below). The slashes in the class name are replaced by double underscores. The prefix
+starts with double underscores as well - see example below.
+<li>For each non-overriding <b>install / uninstall</b> method (defined in one of the base
+LAF classes but not overriden in the specific UI delegate), a new forwarding method is created. The
+method name follows the convention above. The method implementation contains a single call
+to the <b>super</b> implementation.
+<li>For every <b>install / uninstall</b> method (overriding or not), a new implementation is created.
+The implementation calls the previously created method (either renamed original implementation or
+newly created forwarding implementation). Afterwards, the implementation calls the relevant
+widget lifecycle function.
+</ul>
+
+Here is an example that illustrates the above. Suppose we have a custom UI delegate
+for tabbed panes which looks like (relevant <b>install / uninstall</b> methods only):
+
+<br><br>
+    <code>
+<font color="#7f0055"><b>public&nbsp;class&nbsp;</b></font><font color="#000000">CustomTabbedPaneUI&nbsp;</font><font color="#7f0055"><b>extends&nbsp;</b></font><font color="#000000">MetalTabbedPaneUI&nbsp;</font><font color="#000000">{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">installUI</font><font color="#000000">(</font><font color="#000000">JComponent&nbsp;c</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>super</b></font><font color="#000000">.installUI</font><font color="#000000">(</font><font color="#000000">c</font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;do&nbsp;something</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>protected&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">installListeners</font><font color="#000000">()&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>super</b></font><font color="#000000">.installListeners</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;do&nbsp;something</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#000000">}</font></code>
+<br><br>
+
+After augmenting this UI delegate, the bytecode will contain the following implementation
+(not that the complete implementation will contain all <b>install / uninstall</b> methods):
+
+<br><br>
+    <code>
+<font color="#7f0055"><b>public&nbsp;class&nbsp;</b></font><font color="#000000">CustomTabbedPaneUI&nbsp;</font><font color="#7f0055"><b>extends&nbsp;</b></font><font color="#000000">MetalTabbedPaneUI&nbsp;</font><font color="#000000">{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>protected&nbsp;</b></font><font color="#000000">Set&nbsp;lafWidgets;</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;This&nbsp;method&nbsp;is&nbsp;renamed&nbsp;(preserving&nbsp;original&nbsp;implementation)</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">__org__jvnet__lafwidget__ant__temp__installUI</font><font color="#000000">(</font><font color="#000000">JComponent&nbsp;c</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>super</b></font><font color="#000000">.installUI</font><font color="#000000">(</font><font color="#000000">c</font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;do&nbsp;something</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;This&nbsp;method&nbsp;is&nbsp;renamed&nbsp;(preserving&nbsp;original&nbsp;implementation)</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>protected&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">__org__jvnet__lafwidget__ant__temp__installListeners</font><font color="#000000">()&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>super</b></font><font color="#000000">.installListeners</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;do&nbsp;something</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;This&nbsp;method&nbsp;is&nbsp;created&nbsp;automatically&nbsp;(forwarding&nbsp;implementation)</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>protected&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">__org__jvnet__lafwidget__ant__temp__installComponents</font><font color="#000000">()&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>super</b></font><font color="#000000">.installComponents</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">installUI</font><font color="#000000">(</font><font color="#000000">JComponent&nbsp;c</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>this</b></font><font color="#000000">.lafWidgets&nbsp;=&nbsp;LafWidgetRepository.getRepository</font><font color="#000000">()</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">.getMatchingWidgets</font><font color="#000000">(</font><font color="#000000">c</font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>this</b></font><font color="#000000">.__org__jvnet__lafwidget__ant__temp__installUI</font><font color="#000000">(</font><font color="#000000">c</font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>for&nbsp;</b></font><font color="#000000">(</font><font color="#000000">Iterator&nbsp;it&nbsp;=&nbsp;</font><font color="#7f0055"><b>this</b></font><font color="#000000">.lafWidgets.iterator</font><font color="#000000">()</font><font color="#000000">;&nbsp;it.hasNext</font><font color="#000000">()</font><font color="#000000">;</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">LafWidget&nbsp;lw&nbsp;=&nbsp;</font><font color="#000000">(</font><font color="#000000">LafWidget</font><font color="#000000">)&nbsp;</font><font color="#000000">it.next</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">lw.installUI</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>protected&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">installListeners</font><font color="#000000">()&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>this</b></font><font color="#000000">.__org__jvnet__lafwidget__ant__temp__installListeners</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>for&nbsp;</b></font><font color="#000000">(</font><font color="#000000">Iterator&nbsp;it&nbsp;=&nbsp;</font><font color="#7f0055"><b>this</b></font><font color="#000000">.lafWidgets.iterator</font><font color="#000000">()</font><font color="#000000">;&nbsp;it.hasNext</font><font color="#000000">()</font><font color="#000000">;</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">LafWidget&nbsp;lw&nbsp;=&nbsp;</font><font color="#000000">(</font><font color="#000000">LafWidget</font><font color="#000000">)&nbsp;</font><font color="#000000">it.next</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">lw.installListeners</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>protected&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">installComponents</font><font color="#000000">()&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>this</b></font><font color="#000000">.__org__jvnet__lafwidget__ant__temp__installComponents</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>for&nbsp;</b></font><font color="#000000">(</font><font color="#000000">Iterator&nbsp;it&nbsp;=&nbsp;</font><font color="#7f0055"><b>this</b></font><font color="#000000">.lafWidgets.iterator</font><font color="#000000">()</font><font color="#000000">;&nbsp;it.hasNext</font><font color="#000000">()</font><font color="#000000">;</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">LafWidget&nbsp;lw&nbsp;=&nbsp;</font><font color="#000000">(</font><font color="#000000">LafWidget</font><font color="#000000">)&nbsp;</font><font color="#000000">it.next</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">lw.installComponents</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#000000">}</font></code>
+<br><br>
+
+As can be seen, the following changes have been made:
+<ul>
+<li><b>lafWidgets</b> field added.
+<li>Existing methods renamed with the logic preserved (see <b>__org__jvnet__lafwidget__ant__temp__installUI</b>
+and <b>__org__jvnet__lafwidget__ant__temp__installListeners</b>).
+<li>Non-overriden methods - created forwarding delegates (see <b>__org__jvnet__lafwidget__ant__temp__installComponents</b>
+method).
+<li>Implementation of <b>install / uninstall</b> methods calls either original
+implementation (see <b>installUI</b> and <b>installListeners</b>) or the generated
+forwarding implementation (see <b>installListeners</b>). In addition, corresponding
+lifecycle methods of registered widgets are invoked.
+<li>Implementation of <b>installUI</b> queries the <b>LafWidgetRepository</b>
+for all available widgets that match the component and initializes the <b>lafWidgets</b>
+set.
+</ul>
+
+Here is the original stack trace of sample application under Metal look-and-feel:
+<br><br>
+<img src="../images/stacktrace-original.png" width=408 height=120>
+<br><br>
+As can be seen, the call to <b>installUI</b> executes code in <b>BasicButtonUI</b>
+(since <b>MetalCheckBoxUI</b> doesn't override this method). This function
+calls the <b>installDefaults</b> (which is overriden in <b>MetalCheckBoxUI</b>)
+that gets to <b>MetalCheckBoxUI</b>
+which calls the super implementation in <b>MetalRadioButtonUI</b>
+and so on. The matching stack trace in the augmented code (Substance):
+<br><br>
+<img src="../images/stacktrace-augmented.png" width=770 height=241>
+<br><br>
+In the augmented code, we have forwarding implementation of <b>installUI</b> in the
+<b>SubstanceCheckBoxUI</b> which is called after we get the associated widgets. The
+execution eventually gets to the original implementation in the <b>BasicButtonUI</b>
+and goes from there back to <b>installDefaults</b> of <b>SubstanceCheckBoxUI</b> which
+calls the generated forwarding implementation as well. Eventually, we get to the original
+method in <b>MetalRadioButtonUI</b>.<br><br>
+
+This stack trace illustrates the need for the prefix of generated methods. Without this
+perfix we would have stack overflow since <b>SubstanceCheckBoxUI</b> extends
+<b>SubstanceRadioButtonUI</b>.
+
+<h2>LAF augmentation</h2>
+The <b>LAF augmentation</b> follows the same principle. The main LAF class undergoes the
+following changes:
+<ul>
+<li>The original <b>initClassDefaults</b> method is renamed.
+<li>New <b>initClassDefaults</b> method is created. The implementation calls
+the original (renamed) method and then puts additional pairs into the <b>UIDefaults</b>
+table. Each pair contains a "missing" (unimplemented) component UI ID and the
+class name of a generated UI delegate.
+</ul>
+In addition, this process generates component UI delegates that contain implementations
+of <b>createUI</b> and forwarding constructor (w/o arguments or with single argument
+according to the core UI delegate). These delegates should then undergo the <b>delegate
+augmentation</b> as described above. The naming convention for the generated delegates is
+<b>__Forwarding__</b> plus the component UI ID. The generated delegates are put under the same
+package as the main look-and-feel class:<br><br>
+<img src="../images/forwarding-delegates.png" width=465 height=67>
+
+
+<h2>Finding widgets at runtime</h2>
+
+The <b>LafWidgetRepository</b> employs flexible mechanism for the runtime lookup and
+instantiation of widgets. The information on available widgets is searched in
+<b>META-INF/lafwidget.properties</b> resources in the classpath. This means that you can
+put additional (third-party or your own) widgets in the classpath (as jars or simple
+classes) and they will be picked at runtime. <br><br>
+
+The base edition of this project comes with the following <b>lafwidget.properties</b>:
+<br><br>
+<code>
+org.jvnet.lafwidget.combo.ComboboxAutoCompletionWidget = <font color="#0000FF">javax.swing.JComboBox</font><br>
+org.jvnet.lafwidget.desktop.DesktopIconHoverPreviewWidget = <font color="#0000FF">javax.swing.JInternalFrame$JDesktopIcon</font><br>
+org.jvnet.lafwidget.menu.MenuSearchWidget = <font color="#0000FF">javax.swing.JMenuBar</font><br>
+org.jvnet.lafwidget.tabbed.TabHoverPreviewWidget = <font color="#0000FF">javax.swing.JTabbedPane</font><br>
+org.jvnet.lafwidget.tabbed.TabOverviewDialogWidget = <font color="#0000FF">javax.swing.JTabbedPane</font><br>
+org.jvnet.lafwidget.tabbed.TabPagerWidget = <font color="#0000FF">javax.swing.JTabbedPane</font><br>
+org.jvnet.lafwidget.text.PasswordStrengthCheckerWidget = <font color="#0000FF">javax.swing.JPasswordField</font><br>
+org.jvnet.lafwidget.text.LockBorderWidget = <font color="#0000FF">javax.swing.text.JTextComponent;javax.swing.JComboBox</font><br>
+org.jvnet.lafwidget.text.SelectAllOnFocusGainWidget = <font color="#0000FF">javax.swing.text.JTextComponent</font><br>
+org.jvnet.lafwidget.text.EditContextMenuWidget = <font color="#0000FF">javax.swing.text.JTextComponent</font><br>
+org.jvnet.lafwidget.tree.dnd.TreeDragAndDropWidget = <font color="#0000FF">javax.swing.JTree</font><br>
+</code>
+<br><br>
+The format of this file is very simple - each line contains the key and the value.
+The key should be the fully qualified class name of a widget. If no such class is found,
+the class doesn't implement <b>LafWidget</b> interface or doesn't have default constructor,
+the matching entry will be ignored. The value is semicolon-separated list of fully-qualified
+class names of components that can be "decorated" with the relevant widget.<br><br>
+
+At runtime, the implementation of <b>LafWidgetRepository.getMatchingWidgets</b>
+searches the entire hierarchy of the specified component and instantiates all widgets
+that match either the component class or one of its super classes. In addition, it
+doesn't instantiate widgets that return <code>false</code> from
+<b>requiresCustomLafSupport</b> when there is not custom LAF support set.<br><br>
+
+This implementation allows safely removing any (or all) widgets from the final
+archive of a specific look-and-feel that uses this library. For example, if you
+(as a look-and-feel developer) decide to not use the tabbed pane widgets, you can
+safely remove all classes from <b>org.jvnet.lafwidget.tabbed</b> package (without
+changing the <b>lafwidget.properties</b>). This means that you can effectively
+use the widgets as building blocks to build your own "feel" part of the application.
+
+</body>
+</html>
+

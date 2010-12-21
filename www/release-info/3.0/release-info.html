@@ -1,0 +1,285 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Laf-Widget 3.0 release</title>
+</head>
+
+<body>
+
+<h1>Laf-Widget 3.0 <font color="darkblue">Daffodil</font> - new features</h1>
+
+<table border="0" cellpadding="10" cellspacing="0" width="100%">
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>New modes for tab overview dialog</b></td>
+    <td width="80%" valign="top">
+    <p>Two new modes have been 
+    <a href="http://weblogs.java.net/blog/kirillcool/archive/2007/02/spicing_up_your_8.html">added</a>
+    to the tab overview dialog, both
+    based on the code written by <a href="http://blogofbug.com/">Nigel Hughes</a> 
+    and contributed under Apache license. By default, the tab overview button will 
+    show the regular grid overview dialog. To show the new carousel functionality, 
+    override the <code>public TabOverviewKind getOverviewKind(JTabbedPane tabPane)</code> 
+    method of <code>TabPreviewPainter</code> or <code>DefaultTabPreviewPainter</code> 
+    and return either <code>TabOverviewKind.ROUND_CAROUSEL</code> or 
+    <code>TabOverviewKind.MENU_CAROUSEL</code>.</p>
+    
+    <p>Here is how the tab overview dialog looks like under the
+    the <code>TabOverviewKind.ROUND_CAROUSEL</code> kind:</p>
+    
+    <img src="tab-overview-round-carousel.png" width=419 height=280>
+
+    <p>Here is how the tab overview dialog looks like under the
+    the <code>TabOverviewKind.MENU_CAROUSEL</code> kind:</p>
+    
+    <img src="tab-overview-menu-carousel.png" width=445 height=341>
+
+    <p>Here is a Flash movie of the <code>TabOverviewKind.ROUND_CAROUSEL</code> tab overview:</p>
+
+<center>
+<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://active.macromedia.com/flash5/cabs/swflash.cab#version=5,0,0,0" height="279" width="397">
+<param name="movie" value="round-carousel-overview.swf">
+<param name="play" value="true">
+<param name="loop" value="false">
+<param name="quality" value="low">
+<embed src="round-carousel-overview.swf" quality="low" loop="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash" height="279" width="397">
+
+</object>
+</center>
+
+    <p>Here is a Flash movie of the <code>TabOverviewKind.MENU_CAROUSEL</code> tab overview:</p>
+
+<center>
+<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://active.macromedia.com/flash5/cabs/swflash.cab#version=5,0,0,0" height="318" width="393">
+<param name="movie" value="menu-carousel-overview.swf">
+<param name="play" value="true">
+<param name="loop" value="false">
+<param name="quality" value="low">
+<embed src="menu-carousel-overview.swf" quality="low" loop="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash" height="318" width="393">
+
+</object>
+</center>
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Improving grid tab overview mode</b></td>
+    <td width="80%" valign="top">
+    <p>The existing <a href="http://weblogs.java.net/blog/kirillcool/archive/2006/04/spicing_up_your_3.html">grid 
+    tab overview panel</a> is 
+    <a href="http://weblogs.java.net/blog/kirillcool/archive/2007/02/spicing_up_your_7.html">enhanced</a>
+    to provide better visuals.</p>
+
+    <p>Here is how it looked in the previous release:</p>
+    <img src="tab-overview-grid-2.1.png" height="364" width="404">
+
+    <p>Here is how it looks under this release:</p>
+
+    <img src="tab-overview-grid-3.0.png" height="364" width="404">
+
+    <p>The main improvement is the drop shadow borders (using the 
+    <a href="https://looks.dev.java.net">Looks</a> implementation) on the individual 
+    thumbnail previews. In addition, the following shows what happens when you move 
+    the mouse over the grid:</p>
+
+<center>
+<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://active.macromedia.com/flash5/cabs/swflash.cab#version=5,0,0,0" height="360" width="408">
+<param name="movie" value="tab-overview-grid.swf">
+<param name="play" value="true">
+<param name="loop" value="false">
+<param name="quality" value="high">
+<embed src="tab-overview-grid.swf" quality="high" loop="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash" height="360" width="408">
+</object>
+</center>
+
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Support for ghost effects under other LAFs</b></td>
+    <td width="80%" valign="top">
+    <p>The support for ghost effects (configurable via 
+    <code><font color="darkblue">FadeKind.GHOSTING_BUTTON_ROLLOVER</font></code> and
+    <code><font color="darkblue">FadeKind.GHOSTING_BUTTON_PRESS</font></code>) has been 
+    <a href="http://weblogs.java.net/blog/kirillcool/archive/2007/03/spring_effects_1.html">moved</a>
+    to the laf-widget project and is now available for interested third-party LAFs.
+    There are two options to add this functionality, manual and automatic.</p>
+    
+    <p><b>Adding the ghost effects manually:</b></p>
+    <p>For icon ghosting in the button bounds, call
+    <code><font color="darkblue">GhostPaintingUtils.paintGhostIcon(graphics, (AbstractButton) c, iconRect);</font></code>
+    in <code><font color="darkblue">ButtonUI.paintIcon</font></code> before calling the 
+    <code><font color="darkblue">super</font></code> implementation.
+    For icon ghosting outside the button bounds and press ghosting, call
+    <code><font color="darkblue">GhostPaintingUtils.paintGhostImages(c, g);</font></code>
+    in the relevant <code><font color="darkblue">UI.update</font></code> of the 
+    <code><font color="darkblue">PanelUI</font></code>, 
+    <code><font color="darkblue">ToolbarUI</font></code>, 
+    <code><font color="darkblue">MenuBarUI</font></code> and so on. Don't forget to handle the 
+    following cases: delegate doesn't exist at all, delegate exists but doesn't override the 
+    specific method, delegate exists and overrides the specific method.</p>
+
+    <p>The last thing is to initiate the animation itself. For this, look at the 
+    <code><font color="darkblue">org.jvnet.lafwidget.ghost.GhostFadeWidget</font></code> 
+    and the way it installs two listeners on the button. One is on the button model 
+    which tracks the changes to rollover and pressed state, initiating the animation 
+    sequence. Another is on the button itself, tracking changes to the button model 
+    (when you set another model on the button, the listeners on the old one are unwired 
+    and another listener is wired on the new model).</p>
+
+    <p>Since the animations are performed on a separate thread, this thread needs to be stopped 
+    when the specific LAF is unset. You can do this in calling 
+    <code><font color="darkblue">***LookAndFeel.uninitialize</font></code> by 
+    calling <code><font color="darkblue">TrackableThread.requestStopAllThreads()</font></code> API. 
+    Failing to do so may result in improper behaviour of application on disposing the last 
+    open window - VM will not exit.</p>
+    
+    <p><b>Adding the ghost effects automatically:</b></p>
+    
+    <p>There are two ways to "inject" this functionality into the look and feel delegates:</p>
+    <ul>
+      <li>Java classes with <code>main()</code> methods that change existing binary UI delegates.</li>
+      <li><code>Ant</code> tasks that change existing binary UI delegates.</li>
+    </ul>
+
+    <p>The batch scripts in <a href="https://laf-widget.dev.java.net/source/browse/laf-widget/3rd/">this CVS 
+    folder</a> (look for <code>augment-*.bat</code>) show how an existing third-party LAF can be 
+    augmented with ghosting image effects. There are two separate classes, one injecting the 
+    functionality in icon-painting method in a specific UI delegate, and another injecting the 
+    spilling functionality in the <code>update()</code> method in a specific UI delegate.</p>
+
+    <p>The <code>Ant</code> tasks allow injecting this functionality at build time. Here is 
+    the relevant snippet from <a href="https://substance.dev.java.net">Substance</a> 
+    build script:</p>
+
+    <pre><code>
+
+   &lt;taskdef name="icon-ghosting-augment" 
+         classname="org.jvnet.lafwidget.ant.AugmentIconGhostingTask" 
+         classpath="${substance.lib.dir}/laf-widget.jar;
+         	${substance.lib.dir}/asm-all-2.2.2.jar" /&gt;
+   &lt;taskdef name="container-ghosting-augment" 
+         classname="org.jvnet.lafwidget.ant.AugmentContainerGhostingTask" 
+         classpath="${substance.lib.dir}/laf-widget.jar;
+         	${substance.lib.dir}/asm-all-2.2.2.jar" /&gt;
+
+      &lt;!-- Icon ghosting augmentation --&gt;
+      &lt;icon-ghosting-augment verbose="true"&gt;
+         &lt;classpathset dir="${substance.output.dir}" /&gt;
+         &lt;iconghosting className="org.jvnet.substance.SubstanceButtonUI" 
+         	methodName="paintIcon" /&gt;
+         &lt;iconghosting className="org.jvnet.substance.SubstanceToggleButtonUI" 
+         	methodName="paintIcon" /&gt;
+      &lt;/icon-ghosting-augment&gt;
+
+      &lt;!-- Container ghosting augmentation --&gt;
+      &lt;container-ghosting-augment verbose="true"&gt;
+         &lt;classpathset dir="${substance.output.dir}" /&gt;
+         &lt;containerghosting className="org.jvnet.substance.SubstanceDesktopPaneUI" 
+         	toInjectAfterOriginal="true" /&gt;
+         &lt;containerghosting className="org.jvnet.substance.SubstanceMenuBarUI" 
+         	toInjectAfterOriginal="true" /&gt;
+         &lt;containerghosting className="org.jvnet.substance.SubstanceMenuUI" 
+         	toInjectAfterOriginal="true" /&gt;
+
+         &lt;containerghosting className="org.jvnet.substance.SubstancePanelUI" 
+         	toInjectAfterOriginal="true" /&gt;
+         &lt;containerghosting className="org.jvnet.substance.SubstanceScrollBarUI" 
+         	toInjectAfterOriginal="true" /&gt;
+         &lt;containerghosting className="org.jvnet.substance.SubstanceToolBarUI" 
+         	toInjectAfterOriginal="true" /&gt;
+      &lt;/container-ghosting-augment&gt;
+    </code></pre>
+
+    <p>The following Flash videos show icon ghosting (rollover) and press ghosting 
+    effects on the same application under different look and feels. Note that for 
+    demo purposes it uses larger icons and high-contrast implementation (high initial 
+    values for the fade out).</p>
+
+    <p>Here is how it looks under the <a href="http://www.infonode.net/index.html?ilf">InfoNode</a>:</p>
+
+<center>
+<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://active.macromedia.com/flash5/cabs/swflash.cab#version=5,0,0,0" height="140" width="300">
+<param name="movie" value="ghost-infonode.swf">
+<param name="play" value="true">
+<param name="loop" value="false">
+<param name="quality" value="low">
+<embed src="ghost-infonode.swf" quality="low" loop="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash" height="140" width="300">
+
+</object>
+</center>
+
+<p>Here is how it looks under the <a href="http://liquidlnf.dev.java.net/">Liquid</a>:</p>
+
+<center>
+<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://active.macromedia.com/flash5/cabs/swflash.cab#version=5,0,0,0" height="140" width="300">
+<param name="movie" value="ghost-liquid.swf">
+<param name="play" value="true">
+<param name="loop" value="false">
+<param name="quality" value="low">
+<embed src="ghost-liquid.swf" quality="low" loop="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash" height="140" width="300">
+
+</object>
+</center>
+
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" align="left">
+      <p align="right"><b>Focus looping animation</b></td>
+    <td width="80%" valign="top">
+    <p>The new <code><font color="darkblue">FadeKind.FOCUS_LOOP_ANIMATION</font></code>
+    fade kind allows providing looping animation on focus rings. Here is a clip of 
+    looping focus painting under various <a href="https://substance.dev.java.net">Substance</a>
+    focus kinds:</p>
+    
+<center>
+<OBJECT CLASSID="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" WIDTH="190" HEIGHT="156" CODEBASE="http://active.macromedia.com/flash5/cabs/swflash.cab#version=5,0,0,0">
+<PARAM NAME=movie VALUE="focus-loop-animation.swf">
+<PARAM NAME=play VALUE=true>
+<PARAM NAME=loop VALUE=false>
+<PARAM NAME=quality VALUE=low>
+<EMBED SRC="focus-loop-animation.swf" WIDTH=190 HEIGHT=156 quality=low loop=false TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash">
+</EMBED>
+</OBJECT>
+</center>
+
+    <p></p>
+    
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <hr>
+    </td>
+  </tr>
+</table>
+</body>
+
+</html>

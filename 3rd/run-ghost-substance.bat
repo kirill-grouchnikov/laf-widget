@@ -1,0 +1,1 @@
+"C:\Program Files\Java\jdk1.5.0_11\/bin/java" -Dswing.defaultlaf=org.jvnet.substance.skin.SubstanceModerateLookAndFeel -cp ../drop/laf-widget-tst.jar;augmented/substance.jar test.ButtonRolloverDemo -highcontrast

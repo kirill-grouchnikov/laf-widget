@@ -1,0 +1,1 @@
+"C:\Program Files\Java\jdk1.5.0_11\/bin/java" -Dswing.defaultlaf=net.infonode.gui.laf.InfoNodeLookAndFeel -cp ../drop/laf-widget-tst.jar;../drop/laf-widget.jar;augmented/ilf-gpl.jar test.check.SampleFrame

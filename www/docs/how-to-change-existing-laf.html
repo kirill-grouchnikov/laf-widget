@@ -1,0 +1,535 @@
+<html>
+<head>
+<title>Laf-Widget : How To Change Existing LAF</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body bgcolor="#FFFFFF" text="#000000">
+<h1>How to change existing LAF</h1>
+
+<h2>Manual changes</h2>
+
+A look-and-feel that wishes to use this project, needs to change the relevant
+UI delegate classes to integrate with <b>LafWidgetRepository</b>. This can be
+done either manually by changing the code or automatically by using supplied
+Ant task or batch files. <br><br>
+
+In order to get an instance of <b>LafWidgetRepository</b> class, the
+following static function is used:
+<br><br>
+    <code>
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#3f5fbf">/**</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;Returns&nbsp;the&nbsp;widget&nbsp;repository.</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;</font><font color="#7f9fbf">@return&nbsp;</font><font color="#3f5fbf">Widget&nbsp;repository.</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*/</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;static&nbsp;synchronized&nbsp;</b></font><font color="#000000">LafWidgetRepository&nbsp;getRepository</font><font color="#000000">()</font></code>
+<br><br>
+
+
+The UI delegate class needs to call the following function in its <b>installUI</b>
+method:<br><br>
+    <code>
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#3f5fbf">/**</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;Returns&nbsp;a&nbsp;set&nbsp;of&nbsp;widgets&nbsp;that&nbsp;match&nbsp;the&nbsp;specified&nbsp;component.&nbsp;The</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;component&nbsp;hierarchy&nbsp;is&nbsp;scanned&nbsp;bottom-up&nbsp;and&nbsp;all&nbsp;matching&nbsp;widget&nbsp;classes</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;are&nbsp;used&nbsp;to&nbsp;instantiate&nbsp;new&nbsp;instance&nbsp;of&nbsp;widgets.&nbsp;In&nbsp;case&nbsp;the</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;</font><font color="#3f3fbf">{@link&nbsp;#isCustomLafSupportSet}&nbsp;</font><font color="#3f5fbf">is&nbsp;</font><font color="#7f7f9f">&lt;code&gt;</font><font color="#3f5fbf">false</font><font color="#7f7f9f">&lt;/code&gt;</font><font color="#3f5fbf">,&nbsp;only&nbsp;widgets</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;that&nbsp;return&nbsp;</font><font color="#7f7f9f">&lt;code&gt;</font><font color="#3f5fbf">false</font><font color="#7f7f9f">&lt;/code&gt;&nbsp;</font><font color="#3f5fbf">in</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;</font><font color="#3f3fbf">{@link&nbsp;LafWidget#requiresCustomLafSupport()}&nbsp;</font><font color="#3f5fbf">are&nbsp;returned.</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;</font><font color="#7f9fbf">@param&nbsp;</font><font color="#3f5fbf">jcomp</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;UI&nbsp;component.</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;</font><font color="#7f9fbf">@return&nbsp;</font><font color="#3f5fbf">Set&nbsp;of&nbsp;widgets&nbsp;that&nbsp;match&nbsp;the&nbsp;specified&nbsp;component.</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*/</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;synchronized&nbsp;</b></font><font color="#000000">Set&nbsp;getMatchingWidgets</font><font color="#000000">(</font><font color="#000000">JComponent&nbsp;jcomp</font><font color="#000000">)</font></code>
+<br><br>
+
+The result <b>Set</b> contains instances of <b>LafWidget</b> interface. Each instance
+implements some widget (behavioural trait). This interface defines the lifecycle of
+the widget (and the associated component). The relevant functions mirror the usual
+approach of Swing UI delegates, four function for <b>install</b> phase and four
+functions for <b>uninstall</b> phase (see below). These functions should be called
+from the main UI delegate in order to install / uninstall the relevant listeners,
+components and default settings for each widget. Two additional functions in this
+interface set the associated component and check whether the widget requires custom
+LAF support (explained later):
+
+<br><br>
+    <code>
+<font color="#7f0055"><b>public&nbsp;interface&nbsp;</b></font><font color="#000000">LafWidget&nbsp;</font><font color="#000000">{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#3f5fbf">/**</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;Associates&nbsp;a&nbsp;component&nbsp;with&nbsp;</font><font color="#7f7f9f">&lt;code&gt;</font><font color="#3f5fbf">this</font><font color="#7f7f9f">&lt;/code&gt;&nbsp;</font><font color="#3f5fbf">widget.</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;</font><font color="#7f9fbf">@param&nbsp;</font><font color="#3f5fbf">jcomp</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Component.</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*/</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">setComponent</font><font color="#000000">(</font><font color="#000000">JComponent&nbsp;jcomp</font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#3f5fbf">/**</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;Returns&nbsp;indication&nbsp;whether&nbsp;</font><font color="#7f7f9f">&lt;code&gt;</font><font color="#3f5fbf">this</font><font color="#7f7f9f">&lt;/code&gt;&nbsp;</font><font color="#3f5fbf">widget&nbsp;requires&nbsp;custom&nbsp;LAF</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;support.&nbsp;Some&nbsp;widgets&nbsp;such&nbsp;as&nbsp;</font><font color="#3f3fbf">{@link&nbsp;TabOverviewDialogWidget}&nbsp;</font><font color="#3f5fbf">or</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;</font><font color="#3f3fbf">{@link&nbsp;TabHoverPreviewWidget}&nbsp;</font><font color="#3f5fbf">require&nbsp;custom&nbsp;implementation&nbsp;based&nbsp;on&nbsp;the</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;internals&nbsp;of&nbsp;the&nbsp;specific&nbsp;LAF.&nbsp;Relevant&nbsp;functions&nbsp;in&nbsp;the&nbsp;base</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;</font><font color="#3f3fbf">{@link&nbsp;LafWidgetSupport}&nbsp;</font><font color="#3f5fbf">support&nbsp;throw</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;</font><font color="#3f3fbf">{@link&nbsp;UnsupportedOperationException}</font><font color="#3f5fbf">.</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;</font><font color="#7f9fbf">@return&nbsp;</font><font color="#7f7f9f">&lt;code&gt;</font><font color="#3f5fbf">true</font><font color="#7f7f9f">&lt;/code&gt;&nbsp;</font><font color="#3f5fbf">if&nbsp;</font><font color="#7f7f9f">&lt;code&gt;</font><font color="#3f5fbf">this</font><font color="#7f7f9f">&lt;/code&gt;&nbsp;</font><font color="#3f5fbf">widget&nbsp;requires&nbsp;custom</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LAF&nbsp;support,&nbsp;</font><font color="#7f7f9f">&lt;code&gt;</font><font color="#3f5fbf">false</font><font color="#7f7f9f">&lt;/code&gt;&nbsp;</font><font color="#3f5fbf">otherwise.</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*/</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font color="#7f0055"><b>boolean&nbsp;</b></font><font color="#000000">requiresCustomLafSupport</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#3f5fbf">/**</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;Installs&nbsp;UI&nbsp;on&nbsp;the&nbsp;associated&nbsp;component.</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*/</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">installUI</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#3f5fbf">/**</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;Installs&nbsp;default&nbsp;settings&nbsp;for&nbsp;the&nbsp;associated&nbsp;component.</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*/</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">installDefaults</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#3f5fbf">/**</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;Installs&nbsp;listeners&nbsp;for&nbsp;the&nbsp;associated&nbsp;component.</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*/</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">installListeners</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#3f5fbf">/**</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;Installs&nbsp;components&nbsp;for&nbsp;the&nbsp;associated&nbsp;component.</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*/</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">installComponents</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#3f5fbf">/**</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;Uninstalls&nbsp;UI&nbsp;on&nbsp;the&nbsp;associated&nbsp;component.</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*/</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">uninstallUI</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#3f5fbf">/**</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;Uninstalls&nbsp;default&nbsp;settings&nbsp;for&nbsp;the&nbsp;associated&nbsp;component.</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*/</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">uninstallDefaults</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#3f5fbf">/**</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;Uninstalls&nbsp;listeners&nbsp;for&nbsp;the&nbsp;associated&nbsp;component.</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*/</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">uninstallListeners</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#3f5fbf">/**</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*&nbsp;Uninstalls&nbsp;components&nbsp;for&nbsp;the&nbsp;associated&nbsp;component.</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;</font><font color="#3f5fbf">*/</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">uninstallComponents</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#000000">}</font></code>
+<br><br>
+
+As stated above, the UI delegates in the look-and-feel should fetch the set of widgets
+for the associated component (using <b>getMatchingWidgets</b> function on
+<b>LafWidgetRepository</b>) and set it on the UI delegate instance. All
+<b>install</b> / <b>uninstall</b> methods in the UI delegate class should
+call the corresponding lifecycle methods on all the registered widgets. For example:
+
+<br><br>
+    <code>
+<font color="#7f0055"><b>public&nbsp;class&nbsp;</b></font><font color="#000000">MyLafTabbedPaneUI&nbsp;</font><font color="#7f0055"><b>extends&nbsp;</b></font><font color="#000000">MetalTabbedPaneUI&nbsp;</font><font color="#000000">{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>protected&nbsp;</b></font><font color="#000000">Set&nbsp;lafWidgets;</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;static&nbsp;</b></font><font color="#000000">ComponentUI&nbsp;createUI</font><font color="#000000">(</font><font color="#000000">JComponent&nbsp;x</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>return&nbsp;new&nbsp;</b></font><font color="#000000">MyLafTabbedPaneUI</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">installUI</font><font color="#000000">(</font><font color="#000000">JComponent&nbsp;c</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;Fetches&nbsp;all&nbsp;widgets&nbsp;that&nbsp;were&nbsp;registered&nbsp;for&nbsp;the</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;specified&nbsp;component</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>this</b></font><font color="#000000">.lafWidgets&nbsp;=&nbsp;LafWidgetRepository.getRepository</font><font color="#000000">()</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">.getMatchingWidgets</font><font color="#000000">(</font><font color="#000000">c</font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>super</b></font><font color="#000000">.installUI</font><font color="#000000">(</font><font color="#000000">c</font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;Some&nbsp;custom&nbsp;logic</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;Installs&nbsp;all&nbsp;widgets</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>for&nbsp;</b></font><font color="#000000">(</font><font color="#000000">Iterator&nbsp;it&nbsp;=&nbsp;</font><font color="#7f0055"><b>this</b></font><font color="#000000">.lafWidgets.iterator</font><font color="#000000">()</font><font color="#000000">;&nbsp;it.hasNext</font><font color="#000000">()</font><font color="#000000">;</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">LafWidget&nbsp;lw&nbsp;=&nbsp;</font><font color="#000000">(</font><font color="#000000">LafWidget</font><font color="#000000">)&nbsp;</font><font color="#000000">it.next</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">lw.installUI</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>protected&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">installListeners</font><font color="#000000">()&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>super</b></font><font color="#000000">.installListeners</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;Install&nbsp;custom&nbsp;listeners</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;...</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;Installs&nbsp;listeners&nbsp;on&nbsp;all&nbsp;widgets</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>for&nbsp;</b></font><font color="#000000">(</font><font color="#000000">Iterator&nbsp;it&nbsp;=&nbsp;</font><font color="#7f0055"><b>this</b></font><font color="#000000">.lafWidgets.iterator</font><font color="#000000">()</font><font color="#000000">;&nbsp;it.hasNext</font><font color="#000000">()</font><font color="#000000">;</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">LafWidget&nbsp;lw&nbsp;=&nbsp;</font><font color="#000000">(</font><font color="#000000">LafWidget</font><font color="#000000">)&nbsp;</font><font color="#000000">it.next</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">lw.installListeners</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>protected&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">installComponents</font><font color="#000000">()&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>super</b></font><font color="#000000">.installComponents</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;Install&nbsp;custom&nbsp;components</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;...</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;Installs&nbsp;components&nbsp;on&nbsp;all&nbsp;widgets</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>for&nbsp;</b></font><font color="#000000">(</font><font color="#000000">Iterator&nbsp;it&nbsp;=&nbsp;</font><font color="#7f0055"><b>this</b></font><font color="#000000">.lafWidgets.iterator</font><font color="#000000">()</font><font color="#000000">;&nbsp;it.hasNext</font><font color="#000000">()</font><font color="#000000">;</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">LafWidget&nbsp;lw&nbsp;=&nbsp;</font><font color="#000000">(</font><font color="#000000">LafWidget</font><font color="#000000">)&nbsp;</font><font color="#000000">it.next</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">lw.installComponents</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>protected&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">installDefaults</font><font color="#000000">()&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>super</b></font><font color="#000000">.installDefaults</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;Install&nbsp;custom&nbsp;defaults</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;...</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;Installs&nbsp;defaults&nbsp;on&nbsp;all&nbsp;widgets</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>for&nbsp;</b></font><font color="#000000">(</font><font color="#000000">Iterator&nbsp;it&nbsp;=&nbsp;</font><font color="#7f0055"><b>this</b></font><font color="#000000">.lafWidgets.iterator</font><font color="#000000">()</font><font color="#000000">;&nbsp;it.hasNext</font><font color="#000000">()</font><font color="#000000">;</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">LafWidget&nbsp;lw&nbsp;=&nbsp;</font><font color="#000000">(</font><font color="#000000">LafWidget</font><font color="#000000">)&nbsp;</font><font color="#000000">it.next</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">lw.installDefaults</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">uninstallUI</font><font color="#000000">(</font><font color="#000000">JComponent&nbsp;c</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>super</b></font><font color="#000000">.uninstallUI</font><font color="#000000">(</font><font color="#000000">c</font><font color="#000000">)</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;Some&nbsp;custom&nbsp;logic</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;Uninstalls&nbsp;all&nbsp;widgets</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>for&nbsp;</b></font><font color="#000000">(</font><font color="#000000">Iterator&nbsp;it&nbsp;=&nbsp;</font><font color="#7f0055"><b>this</b></font><font color="#000000">.lafWidgets.iterator</font><font color="#000000">()</font><font color="#000000">;&nbsp;it.hasNext</font><font color="#000000">()</font><font color="#000000">;</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">LafWidget&nbsp;lw&nbsp;=&nbsp;</font><font color="#000000">(</font><font color="#000000">LafWidget</font><font color="#000000">)&nbsp;</font><font color="#000000">it.next</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">lw.uninstallUI</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>protected&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">uninstallComponents</font><font color="#000000">()&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>super</b></font><font color="#000000">.uninstallComponents</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;Uninstall&nbsp;custom&nbsp;components</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;...</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;Uninstalls&nbsp;components&nbsp;on&nbsp;all&nbsp;widgets</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>for&nbsp;</b></font><font color="#000000">(</font><font color="#000000">Iterator&nbsp;it&nbsp;=&nbsp;</font><font color="#7f0055"><b>this</b></font><font color="#000000">.lafWidgets.iterator</font><font color="#000000">()</font><font color="#000000">;&nbsp;it.hasNext</font><font color="#000000">()</font><font color="#000000">;</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">LafWidget&nbsp;lw&nbsp;=&nbsp;</font><font color="#000000">(</font><font color="#000000">LafWidget</font><font color="#000000">)&nbsp;</font><font color="#000000">it.next</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">lw.uninstallComponents</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>protected&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">uninstallDefaults</font><font color="#000000">()&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>super</b></font><font color="#000000">.uninstallDefaults</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;Uninstall&nbsp;custom&nbsp;defaults</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;...</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;Uninstalls&nbsp;defaults&nbsp;on&nbsp;all&nbsp;widgets</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>for&nbsp;</b></font><font color="#000000">(</font><font color="#000000">Iterator&nbsp;it&nbsp;=&nbsp;</font><font color="#7f0055"><b>this</b></font><font color="#000000">.lafWidgets.iterator</font><font color="#000000">()</font><font color="#000000">;&nbsp;it.hasNext</font><font color="#000000">()</font><font color="#000000">;</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">LafWidget&nbsp;lw&nbsp;=&nbsp;</font><font color="#000000">(</font><font color="#000000">LafWidget</font><font color="#000000">)&nbsp;</font><font color="#000000">it.next</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">lw.uninstallDefaults</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff"></font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>protected&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">uninstallListeners</font><font color="#000000">()&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>super</b></font><font color="#000000">.uninstallListeners</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;Uninstall&nbsp;custom&nbsp;listeners</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;...</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;Uninstalls&nbsp;listeners&nbsp;on&nbsp;all&nbsp;widgets</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>for&nbsp;</b></font><font color="#000000">(</font><font color="#000000">Iterator&nbsp;it&nbsp;=&nbsp;</font><font color="#7f0055"><b>this</b></font><font color="#000000">.lafWidgets.iterator</font><font color="#000000">()</font><font color="#000000">;&nbsp;it.hasNext</font><font color="#000000">()</font><font color="#000000">;</font><font color="#000000">)&nbsp;{</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">LafWidget&nbsp;lw&nbsp;=&nbsp;</font><font color="#000000">(</font><font color="#000000">LafWidget</font><font color="#000000">)&nbsp;</font><font color="#000000">it.next</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">lw.uninstallListeners</font><font color="#000000">()</font><font color="#000000">;</font><br />
+<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<font color="#ffffff"></font><br />
+<font color="#000000">}</font></code>
+<br><br>
+
+Note that if a UI delegate doesn't override some <b>install</b> / <b>uninstall</b>
+method, it needs to do so for proper lifecycle management of the widgets. In this case
+you will need to call the <b>super</b> implementation and call relevant method on
+all widgets. In addition, some look-and-feels do not provide custom UI delegates for some
+components. If the relevant components have associated widgets, you will have to
+create (and register) forwarding UI delegate (that looks as above) without any
+custom logic (only integration with <b>LafWidgetRepository</b>).<br><br>
+
+<h2>Automatic changes</h2>
+
+This project provides an Ant task and a collection of sample batch scripts that
+allow automating the above tasks of adapting the existing look-and-feel UI delegates
+and creating forwarding UI delegates. The automatic support uses
+<a href="http://asm.objectweb.org/">ASM bytecode manipulation framework</a> in order
+to take the existing look-and-feel classes and <b>augment</b> the compiled classes
+with the code described in the previous section. Note that in this case you don't have
+to make any changes to your code. You can even take an existing third-party LAF jar
+(tested on InfoNode, Liquid, Looks, Napkin, Pagosoft and Squareness) and change
+it locally.<br><br>
+
+Currently, the automatic support can handle any look-and-feel that extends
+<b>Basic</b>, <b>Metal</b> or <b>Windows</b> core look-and-feels and follow the
+conventional extension points. The supported look-and-feel must:
+<ul>
+<li>Override <b>LookAndFeel.initClassDefaults</b> to specify LAF-specific
+UI delegates. This rules out <b>LAF augmentation</b> on the
+<a href="https://winlaf.dev.java.net">winlaf</a> that uses custom mechanism to
+specify UI delegates.
+<li>Override various <b>install</b> and <b>uninstall</b> methods from
+base UI delegate classes.
+</ul>
+
+There are two types of automatic support (that match the relevant tasks in
+the manual support) - <b>delegate augmentation</b> and <b>LAF augmentation</b>.
+The <b>LAF augmentation</b> takes the main look-and-feel class and changes the
+<b>initClassDefaults</b> function, adding entries for the missing UI delegates.
+In addition, it creates forwarding UI delegates (see examples below). The
+<b>delegate augmentation</b> takes an existing UI delegate that is not
+using <b>LafWidgetRepository</b> and changes the relevant <b>install</b> /
+<b>uninstall</b> methods (adding forwarding ones as necessary). Note that
+when using automatic support, the <b>LAF augmentation</b> must be performed
+before the <b>delegate augmentation</b> since the latter needs to augment
+the generated forwarding delegates.<br><br>
+
+All the classes mentioned below are located in <b>org.jvnet.lafwidget.ant</b>
+package. Note that in order to use the automatic support, you need
+to use the <b>asm-all-2.2.2.jar</b> (available in CVS repository under <b>/lib</b>
+or from the <a href="http://asm.objectweb.org/">ASM</a> project site).
+<br><br>
+
+The <b>LAF augmentation</b> is provided by the <b>LafMainClassAugmenter</b>.
+Its main function gets the following parameters:
+<ul>
+<li><b>-verbose</b> (optional) specifies that the augmenter should output
+the tracing statements on its execution to <b>System.out</b>.
+<li><b>-main</b> specifies the fully-qualified class name of the main
+look-and-feel class.
+<li><b>-dir</b> specifies the root directory that contains all compiled
+LAF classes. This directory can be created by using <b>jar</b> on the
+LAF main jar.
+<li><b>-delegates</b> specifies semicolon-separated IDs of UI delegates
+to generate. This parameter should contain UI IDs (see examples below) for
+all controls that don't have custom UI delegates and have associated
+widgets. See the <a href="all-component-ui-ids.txt">list of all component UI IDs</a>
+that exist in Swing core.
+</ul>
+
+The matching Ant task is defined in <b>AugmentMainTask</b> which has
+the following attributes and elements:
+<ul>
+<li><b>verbose</b> (optional) attribute. If present, Ant output will contain
+tracing statements of the augmentation process.
+<li><b>mainlafclassname</b> attribute. Specify the fully-qualified class
+name of the main look-and-feel class.
+<li><b>classpathset</b> element. Specifies the root directory that contains
+all compiled LAF classes.
+<li><b>delegate</b> element. Has a single <b>name</b> attribute
+that holds the ID of UI delegate to generate. See the
+<a href="all-component-ui-ids.txt">list of all component UI IDs</a>
+that exist in Swing core.
+</ul>
+
+The <b>delegate augmentation</b> is provided by the <b>UiDelegateAugmenter</b>.
+Its main function gets the following parameters:
+<ul>
+<li><b>-verbose</b> (optional) specifies that the augmenter should output
+the tracing statements on its execution to <b>System.out</b>.
+<li><b>-pattern</b> (optional) specifies the pattern that will be used
+for deciding which classes are augmented. The default value is
+<b>.*UI\u002Eclass</b>. It is recommended to use the default value
+when the <b>LAF augmentation</b> is used (since the classnames of the
+generated UI delegates begin with <b>__Forwarding__</b>).
+<li>The last parameter can point to either a file or a directory.
+The directory should be the root directory for classes.
+</ul>
+
+The matching Ant task is defined in <b>AugmentTask</b> which has
+the following attributes and elements:
+<ul>
+<li><b>verbose</b> (optional) attribute. If present, Ant output will contain
+tracing statements of the augmentation process.
+<li><b>pattern</b> (optional) attribute. Specifies the pattern that will be used
+for deciding which classes are augmented.
+<li><b>classpathset</b> element. Specifies the root directory that contains
+all compiled LAF classes.
+</ul>
+
+Examples of batch files (in CVS repository under <b>/3rd</b>):
+<ul>
+<li>For <a href="https://looks.dev.java.net/">JGoodies Looks</a>
+Plastic XP:
+<br><br>
+<code><font color="#804020">
+mkdir TMP
+<br><br>
+cd TMP
+<br><br>
+"%JAVA_HOME%/bin/jar" xf ../looks-2.0.2.jar
+<br><br>
+"%JAVA_HOME%/bin/java" -classpath ../looks-2.0.2.jar;../../drop/laf-widget-50.jar;../../lib/asm-all-2.2.2.jar <b>org.jvnet.lafwidget.ant.LafMainClassAugmenter</b> -verbose <b>-main</b> com.jgoodies.looks.plastic.PlasticXPLookAndFeel <b>-delegates</b> EditorPaneUI;FormattedTextFieldUI;TextFieldUI;TextPaneUI -dir .
+<br><br>
+"%JAVA_HOME%/bin/java" -classpath ../../drop/laf-widget-50.jar;../../lib/asm-all-2.2.2.jar <b>org.jvnet.lafwidget.ant.UiDelegateAugmenter</b> -verbose <b>-pattern</b> .*UI\u002Eclass .
+<br><br>
+"%JAVA_HOME%/bin/jar" cfm ../augmented/looks-2.0.2.jar META-INF/manifest.mf .
+<br><br>
+cd ..
+<br><br>
+rmdir TMP /s /q
+<br><br>
+</font></code>
+
+<li>For <a href="https://liquidlnf.dev.java.net/">Liquid</a>:
+<br><br>
+<code><font color="#804020">
+mkdir TMP
+<br><br>
+cd TMP
+<br><br>
+"%JAVA_HOME%/bin/jar" xf ../liquidlnf.jar
+<br><br>
+"%JAVA_HOME%/bin/java" -classpath ../../drop/laf-widget-50.jar;../../lib/asm-all-2.2.2.jar <b>org.jvnet.lafwidget.ant.LafMainClassAugmenter</b> -verbose <b>-main</b> com.birosoft.liquid.LiquidLookAndFeel <b>-delegates</b> EditorPaneUI;FormattedTextFieldUI;TextAreaUI;TextPaneUI -dir .
+<br><br>
+"%JAVA_HOME%/bin/java" -classpath ../../drop/laf-widget-50.jar;../../lib/asm-all-2.2.2.jar <b>org.jvnet.lafwidget.ant.UiDelegateAugmenter</b> -verbose <b>-pattern</b> .*UI\u002Eclass .
+<br><br>
+"%JAVA_HOME%/bin/jar" cfm ../augmented/liquidlnf.jar META-INF/manifest.mf .
+<br><br>
+cd ..
+<br><br>
+rmdir TMP /s /q
+<br><br>
+</font></code>
+
+<li>For <a href="https://pgslookandfeel.dev.java.net/">Pagosoft</a>:
+<br><br>
+<code><font color="#804020">
+mkdir TMP
+<br><br>
+cd TMP
+<br><br>
+"%JAVA_HOME%/bin/jar" xf ../PgsLookAndFeel.jar
+<br><br>
+"%JAVA_HOME%/bin/java" -classpath ../../drop/laf-widget-50.jar;../../lib/asm-all-2.2.2.jar <b>org.jvnet.lafwidget.ant.LafMainClassAugmenter</b> -verbose <b>-main</b> com.pagosoft.plaf.PgsLookAndFeel <b>-delegates</b> InternalFrameUI -dir .
+<br><br>
+"%JAVA_HOME%/bin/java" -classpath ../../drop/laf-widget-50.jar;../../lib/asm-all-2.2.2.jar <b>org.jvnet.lafwidget.ant.UiDelegateAugmenter</b> -verbose <b>-pattern</b> .*UI\u002Eclass .
+<br><br>
+"%JAVA_HOME%/bin/jar" cfm ../augmented/PgsLookAndFeel.jar META-INF/manifest.mf .
+<br><br>
+cd ..
+<br><br>
+rmdir TMP /s /q
+<br><br>
+</font></code>
+
+<li>For <a href="http://squareness.sourceforge.net/">Squareness</a>:
+<br><br>
+<code><font color="#804020">
+mkdir TMP
+<br><br>
+cd TMP
+<br><br>
+"%JAVA_HOME%/bin/jar" xf ../squareness.jar
+<br><br>
+"%JAVA_HOME%/bin/java" -classpath ../../drop/laf-widget-50.jar;../../lib/asm-all-2.2.2.jar <b>org.jvnet.lafwidget.ant.LafMainClassAugmenter</b> -verbose <b>-main</b> net.beeger.squareness.SquarenessLookAndFeel <b>-delegates</b> MenuBarUI;EditorPaneUI;FormattedTextFieldUI;PasswordFieldUI;TextAreaUI;TextFieldUI;TextPaneUI -dir .
+<br><br>
+"%JAVA_HOME%/bin/java" -classpath ../../drop/laf-widget-50.jar;../../lib/asm-all-2.2.2.jar <b>org.jvnet.lafwidget.ant.UiDelegateAugmenter</b> -verbose <b>-pattern</b> .*UI\u002Eclass .
+<br><br>
+"%JAVA_HOME%/bin/jar" cfm ../augmented/squareness.jar META-INF/manifest.mf .
+<br><br>
+cd ..
+<br><br>
+rmdir TMP /s /q
+<br><br>
+</font></code>
+
+<li>For <a href="http://www.infonode.net/index.html?ilf">InfoNode</a>:
+<br><br>
+<code><font color="#804020">
+mkdir TMP
+<br><br>
+cd TMP
+<br><br>
+"%JAVA_HOME%/bin/jar" xf ../ilf-gpl.jar
+<br><br>
+"%JAVA_HOME%/bin/java" -classpath ../../drop/laf-widget-50.jar;../../lib/asm-all-2.2.2.jar <b>org.jvnet.lafwidget.ant.LafMainClassAugmenter</b> -verbose <b>-main</b> net.infonode.gui.laf.InfoNodeLookAndFeel <b>-delegates</b> TabbedPaneUI;MenuBarUI;EditorPaneUI;FormattedTextFieldUI;PasswordFieldUI;TextAreaUI;TextFieldUI;TextPaneUI -dir .
+<br><br>
+"%JAVA_HOME%/bin/java" -classpath ../../drop/laf-widget-50.jar;../../lib/asm-all-2.2.2.jar <b>org.jvnet.lafwidget.ant.UiDelegateAugmenter</b> -verbose <b>-pattern</b> .*UI\u002Eclass .
+<br><br>
+"%JAVA_HOME%/bin/jar" cfm ../augmented/ilf-gpl.jar META-INF/manifest.mf .
+<br><br>
+cd ..
+<br><br>
+rmdir TMP /s /q
+<br><br>
+</font></code>
+
+<li>For <a href="http://napkinlaf.sourceforge.net/">Napkin</a>:
+<br><br>
+<code><font color="#804020">
+mkdir TMP
+<br><br>
+cd TMP
+<br><br>
+"%JAVA_HOME%/bin/jar" xf ../napkinlaf.jar
+<br><br>
+"%JAVA_HOME%/bin/java" -classpath ../../drop/laf-widget-50.jar;../../lib/asm-all-2.2.2.jar <b>org.jvnet.lafwidget.ant.UiDelegateAugmenter</b> -verbose <b>-pattern</b> .*UI\u002Eclass .
+<br><br>
+"%JAVA_HOME%/bin/jar" cfm ../augmented/napkinlaf.jar META-INF/manifest.mf .
+<br><br>
+cd ..
+<br><br>
+rmdir TMP /s /q
+<br><br>
+</font></code>
+
+Sample usage of Ant tasks for <b>LAF augmentation</b> and
+<b>delegate augmentation</b> can be found
+in the build script of <a href="https://substance.dev.java.net">Substance</a>:
+
+<br><br>
+<code><font color="#804020">
+&nbsp;&nbsp;&nbsp;&lt;!-- Augment task definition --&gt;<br>
+<b>&nbsp;&nbsp;&nbsp;&lt;taskdef name="delegate-augment" classname="org.jvnet.lafwidget.ant.AugmentTask" classpath="${substance.lib.dir}/laf-widget-50.jar;${substance.lib.dir}/asm-all-2.2.2.jar" /&gt;</b><br>
+<b>&nbsp;&nbsp;&nbsp;&lt;taskdef name="laf-augment" classname="org.jvnet.lafwidget.ant.AugmentMainTask" classpath="${substance.lib.dir}/laf-widget-50.jar;${substance.lib.dir}/asm-all-2.2.2.jar" /&gt;</b><br>
+<br>
+&nbsp;&nbsp;&nbsp;&lt;target name="jar-bin" description="create runtime jar"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;delete file="${substance.drop.dir}/substance.jar" /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;unjar src="${substance.lib.dir}/laf-plugin.jar" dest="${substance.output.dir}/" /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;unjar src="${substance.lib.dir}/laf-widget-50.jar" dest="${substance.output.dir}/" /&gt;<br>
+<br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;laf-augment verbose="true" mainlafclassname="org.jvnet.substance.SubstanceLookAndFeel"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;delegate name="DesktopPaneUI" /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;delegate name="LabelUI" /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;delegate name="PopupMenuUI" /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;delegate name="ToolBarSeparatorUI" /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;delegate name="ToolTipUI" /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;delegate name="ViewportUI" /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;classpathset dir="${substance.output.dir}" /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/laf-augment&gt;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;delegate-augment verbose="true" pattern=".*UI\u002Eclass"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;classpathset dir="${substance.output.dir}" /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/delegate-augment&gt;<br></b>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;jar compress="true" destfile="${substance.drop.dir}/substance.jar" manifest="${substance.src.dir}/META-INF/MANIFEST.MF"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;fileset dir="${substance.output.dir}/" excludes="test/** org/jvnet/lafwidget/ant/**" /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;fileset dir="${module.substance.basedir}/" includes="resources/**" /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/jar&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;copy file="${substance.drop.dir}/substance.jar" todir="${module.substance.basedir}/www/webstart" /&gt;<br>
+&nbsp;&nbsp;&nbsp;&lt;/target&gt;
+</font></code>
+
+<br><br>
+As noted above, the classpath for the build script must contain reference
+to the <b>asm-all-2.2.2.jar</b>. In addition, the Ant excerpt above shows
+how to take the classes from the <b>laf-widget-50.jar</b> and put them in the
+resulting LAF jar (all classes except <b>test</b> and <b>org.jvnet.lafwidget.ant</b>
+packages).
+<br><br>
+<b>Important note</b> - it is highly recommended to put all
+unimplemented component UI IDs from <a href="all-component-ui-ids.txt">this list</a>
+in the LAF augmentation. This is to ensure that the specific look-and-feel
+will work correctly with all base and <a href="how-to-write-your-own-widget.html">custom</a>
+widgets.
+
+</body>
+</html>
+
