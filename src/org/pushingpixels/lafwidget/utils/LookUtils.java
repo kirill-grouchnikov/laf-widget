@@ -52,6 +52,15 @@ public final class LookUtils {
 	private static final String JAVA_VERSION = getSystemProperty("java.version");
 
 	/**
+	 * The <code>java.vendor</code> System Property.
+	 * <p>
+	 * 
+	 * Defaults to <code>null</code> if the runtime does not have security
+	 * access to read this property or the property does not exist.
+	 */
+	private static final String JAVA_VENDOR = getSystemProperty("java.vendor");
+
+	/**
 	 * The <code>os.name</code> System Property. Operating system name.
 	 * <p>
 	 * 
@@ -111,6 +120,12 @@ public final class LookUtils {
 	 * can check that it's neither 1.4 nor 1.5.
 	 */
 	public static final boolean IS_JAVA_6_OR_LATER = !IS_JAVA_1_4 && !IS_JAVA_5;
+
+	/**
+	 * True if this is Java 7.x or later. Since we don't support Java 1.3, we
+	 * can check that it's not 1.4, 1.5 or 1.6
+	 */
+	public static final boolean IS_JAVA_7_OR_LATER = !IS_JAVA_1_4 && !IS_JAVA_5 && !IS_JAVA_6;
 
 	/**
 	 * True if this is Java 1.4 or Java 5.
@@ -214,9 +229,23 @@ public final class LookUtils {
 			&& startsWith(OS_VERSION, "6.0");
 
 	/**
+	 * True if this is Mac Yosemite.
+	 */
+	public static final boolean IS_OS_MAC_YOSEMITE = IS_OS_MAC 
+			&& startsWith(OS_VERSION, "10.10");
+
+	/**
+	 * True if this is Mac El Capitan.
+	 */
+	public static final boolean IS_OS_MAC_EL_CAPITAN = IS_OS_MAC 
+			&& startsWith(OS_VERSION, "10.11");
+
+	/**
 	 * True if this is Solaris.
 	 */
 	public static final boolean IS_OS_SOLARIS = startsWith(OS_NAME, "Solaris");
+	
+	public static final boolean IS_VENDOR_APPLE = containsIgnoreCase(JAVA_VENDOR, "Apple");
 
 	// Other Properties *******************************************************
 
@@ -444,6 +473,12 @@ public final class LookUtils {
 		return str != null
 				&& str.toUpperCase(Locale.ENGLISH).startsWith(
 						prefix.toUpperCase(Locale.ENGLISH));
+	}
+	
+	private static boolean containsIgnoreCase(String str, String searchFor) {
+		return str != null
+				&& str.toUpperCase(Locale.ENGLISH).contains(
+						searchFor.toUpperCase(Locale.ENGLISH));
 	}
 
 }
