@@ -18,7 +18,7 @@
 	<!-- JDK definitions -->
 
 	<path id="jdk.classpath">
-		<fileset dir="${jdk.home}">
+		<fileset dir="${java.home}">
 			<include name="jre/lib/charsets.jar" />
 			<include name="jre/lib/deploy.jar" />
 			<include name="jre/lib/javaws.jar" />
@@ -33,7 +33,7 @@
 		</fileset>
 	</path>
 
-	<property name="project.jdk.home" value="${jdk.home}" />
+	<property name="project.jdk.home" value="${java.home}" />
 	<property name="project.jdk.classpath" value="jdk.classpath" />
 	<!-- Project Libraries -->
 	<!-- Global Libraries -->
@@ -47,7 +47,7 @@
 	<property name="laf-widget.drop.dir" value="${module.laf-widget.basedir}/drop" />
 	<property name="laf-widget.lib.dir" value="${module.laf-widget.basedir}/lib" />
 	<property name="laf-widget.src.dir" value="${module.laf-widget.basedir}/src/" />
-	<property name="laf-widget.version" value="5.1RC Nightshade" />
+	<property name="laf-widget.version" value="5.2dev Orchid" />
 
 	<path id="laf-widget.module.bootclasspath">
 		<!-- Paths to be included in compilation bootclasspath -->
@@ -86,7 +86,7 @@
 
 	<target name="compile.module.laf-widget.production" description="compile module laf-widget production classes">
 		<mkdir dir="${laf-widget.output.dir}" />
-		<javac source="${javac.source}" target="${javac.target}" encoding="${javac.encoding}" destdir="${laf-widget.output.dir}" debug="${javac.debug}" nowarn="${javac.generate.no.warnings}" memoryMaximumSize="${javac.max.memory}" fork="true" executable="${module.jdk.home.laf-widget}/bin/javac">
+		<javac source="${javac.source}" target="${javac.target}" encoding="${javac.encoding}" destdir="${laf-widget.output.dir}" debug="${javac.debug}" nowarn="${javac.generate.no.warnings}" memoryMaximumSize="${javac.max.memory}" fork="true">
 			<compilerarg line="${javac.args.laf-widget}" />
 			<bootclasspath refid="laf-widget.module.bootclasspath" />
 			<classpath refid="laf-widget.module.classpath" />
@@ -104,7 +104,7 @@
 
 	<target name="compile.module.laf-widget.tests" description="compile module laf-widget test classes" unless="skip.tests">
 		<mkdir dir="${laf-widget.output.dir}" />
-		<javac source="${javac.source}" target="${javac.target}" encoding="${javac.encoding}" destdir="${laf-widget.output.dir}" debug="${javac.debug}" nowarn="${javac.generate.no.warnings}" memoryMaximumSize="${javac.max.memory}" fork="true" executable="${module.jdk.home.laf-widget}/bin/javac">
+		<javac source="${javac.source}" target="${javac.target}" encoding="${javac.encoding}" destdir="${laf-widget.output.dir}" debug="${javac.debug}" nowarn="${javac.generate.no.warnings}" memoryMaximumSize="${javac.max.memory}" fork="true">
 			<compilerarg line="${javac.args.laf-widget}" />
 			<bootclasspath refid="laf-widget.module.bootclasspath" />
 			<classpath refid="laf-widget.module.classpath" />
@@ -180,7 +180,7 @@
 		<echo message="Java home: ${java.home}" />
 		<echo message="Java version: ${ant.java.version}" />
 		<echo message="Ant version: ${ant.version}" />
-		<echo message="JavaC home: ${jdk.home}" />
+		<echo message="JavaC home: ${java.home}" />
 	</target>
 
 	<target name="jar" depends="jar-bin, jar-bin-tst" description="create all jars" />
