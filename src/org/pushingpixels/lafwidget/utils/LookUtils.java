@@ -43,15 +43,6 @@ public final class LookUtils {
 	// Basics System Properties **********************************************
 
 	/**
-	 * The <code>java.version</code> System Property.
-	 * <p>
-	 * 
-	 * Defaults to <code>null</code> if the runtime does not have security
-	 * access to read this property or the property does not exist.
-	 */
-	private static final String JAVA_VERSION = getSystemProperty("java.version");
-
-	/**
 	 * The <code>java.vendor</code> System Property.
 	 * <p>
 	 * 
@@ -77,60 +68,6 @@ public final class LookUtils {
 	 * access to read this property or the property does not exist.
 	 */
 	private static final String OS_VERSION = getSystemProperty("os.version");
-
-	// Requesting the Java Version ********************************************
-
-	/**
-	 * True if this is Java 1.4.
-	 */
-	public static final boolean IS_JAVA_1_4 = startsWith(JAVA_VERSION, "1.4");
-
-	/**
-	 * True if this is Java 1.4.0_*.
-	 */
-	public static final boolean IS_JAVA_1_4_0 = startsWith(JAVA_VERSION,
-			"1.4.0");
-
-	/**
-	 * True if this is Java 1.4.2 or later. Since we assume Java 1.4 we just
-	 * check for 1.4.0 and 1.4.1.
-	 */
-	public static final boolean IS_JAVA_1_4_2_OR_LATER = !startsWith(
-			JAVA_VERSION, "1.4.0")
-			&& !startsWith(JAVA_VERSION, "1.4.1");
-
-	/**
-	 * True if this is Java 5.x. We check for a prefix of 1.5.
-	 */
-	public static final boolean IS_JAVA_5 = startsWith(JAVA_VERSION, "1.5");
-
-	/**
-	 * True if this is Java 5.x or later. Since we don't support Java 1.3, we
-	 * can check that it's not 1.4.
-	 */
-	public static final boolean IS_JAVA_5_OR_LATER = !IS_JAVA_1_4;
-
-	/**
-	 * True if this is Java 6. We check for a prefix of 1.6.
-	 */
-	public static final boolean IS_JAVA_6 = startsWith(JAVA_VERSION, "1.6");
-
-	/**
-	 * True if this is Java 6.x or later. Since we don't support Java 1.3, we
-	 * can check that it's neither 1.4 nor 1.5.
-	 */
-	public static final boolean IS_JAVA_6_OR_LATER = !IS_JAVA_1_4 && !IS_JAVA_5;
-
-	/**
-	 * True if this is Java 7.x or later. Since we don't support Java 1.3, we
-	 * can check that it's not 1.4, 1.5 or 1.6
-	 */
-	public static final boolean IS_JAVA_7_OR_LATER = !IS_JAVA_1_4 && !IS_JAVA_5 && !IS_JAVA_6;
-
-	/**
-	 * True if this is Java 1.4 or Java 5.
-	 */
-	public static final boolean IS_JAVA_1_4_OR_5 = IS_JAVA_1_4 || IS_JAVA_5;
 
 	// Requesting the Operating System Name ***********************************
 
@@ -250,11 +187,6 @@ public final class LookUtils {
 	// Other Properties *******************************************************
 
 	/**
-	 * True if the Windows XP Look&amp;Feel is enabled.
-	 */
-	public static final boolean IS_LAF_WINDOWS_XP_ENABLED = isWindowsXPLafEnabled();
-
-	/**
 	 * True if if the screen resolution is smaller than 120 dpi.
 	 * 
 	 * @see Toolkit#getScreenResolution()
@@ -332,35 +264,7 @@ public final class LookUtils {
 			result = Boolean.TRUE;
 		else
 			result = null;
-		if (result != null) {
-			LookUtils.log(logMessage + " have been "
-					+ (result.booleanValue() ? "en" : "dis")
-					+ "abled in the system properties.");
-		}
 		return result;
-	}
-
-	/**
-	 * Checks and answers whether the Windows XP style is enabled. This method
-	 * is intended to be called only if a Windows look&feel is about to be
-	 * installed or already active in the UIManager. The XP style of the Windows
-	 * look&amp;feel is enabled by default on Windows XP platforms since the
-	 * J2SE 1.4.2; it can be disabled either in the Windows desktop as well as
-	 * in the Java runtime by setting a System property.
-	 * <p>
-	 * 
-	 * First checks the platform, platform version and Java version. Then checks
-	 * whether the desktop property <tt>win.xpstyle.themeActive</tt> is set or
-	 * not.
-	 * 
-	 * @return true if the Windows XP style is enabled
-	 */
-	private static boolean isWindowsXPLafEnabled() {
-		return (IS_OS_WINDOWS_XP || IS_OS_WINDOWS_VISTA)
-				&& IS_JAVA_1_4_2_OR_LATER
-				&& Boolean.TRUE.equals(Toolkit.getDefaultToolkit()
-						.getDesktopProperty("win.xpstyle.themeActive"))
-				&& getSystemProperty("swing.noxp") == null;
 	}
 
 	/**
@@ -385,72 +289,6 @@ public final class LookUtils {
 	 */
 	public static boolean getToolkitUsesNativeDropShadows() {
 		return IS_OS_MAC;
-	}
-
-	/**
-	 * Computes and returns a Color that is slightly brighter than the specified
-	 * Color.
-	 * 
-	 * @param color
-	 *            the color used as basis for the brightened color
-	 * @return a slightly brighter color
-	 */
-	public static Color getSlightlyBrighter(Color color) {
-		return getSlightlyBrighter(color, 1.1f);
-	}
-
-	/**
-	 * Computes and returns a Color that is slightly brighter than the specified
-	 * Color.
-	 * 
-	 * @param color
-	 *            the color used as basis for the brightened color
-	 * @param factor
-	 *            the factor used to compute the brightness
-	 * @return a slightly brighter color
-	 */
-	public static Color getSlightlyBrighter(Color color, float factor) {
-		float[] hsbValues = new float[3];
-		Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(),
-				hsbValues);
-		float hue = hsbValues[0];
-		float saturation = hsbValues[1];
-		float brightness = hsbValues[2];
-		float newBrightness = Math.min(brightness * factor, 1.0f);
-		return Color.getHSBColor(hue, saturation, newBrightness);
-	}
-
-	// Minimal logging ******************************************************
-
-	/**
-	 * Enables or disables the Looks logging.
-	 * 
-	 * @param enabled
-	 *            true to enable logging, false to disable it
-	 */
-	public static void setLoggingEnabled(boolean enabled) {
-		loggingEnabled = enabled;
-	}
-
-	/**
-	 * Prints a new line to the console if logging is enabled.
-	 */
-	public static void log() {
-		if (loggingEnabled) {
-			System.out.println();
-		}
-	}
-
-	/**
-	 * Prints the given message to the console if logging is enabled.
-	 * 
-	 * @param message
-	 *            the message to print
-	 */
-	public static void log(String message) {
-		if (loggingEnabled) {
-			System.out.println("JGoodies Looks: " + message);
-		}
 	}
 
 	// Private Helper Methods ***********************************************

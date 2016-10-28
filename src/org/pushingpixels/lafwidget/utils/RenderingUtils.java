@@ -41,42 +41,6 @@ public class RenderingUtils {
 
 	private static Map<String, Map> desktopHintsCache = new HashMap<String, Map>();
 
-	public static Map installDesktopHintsOld(Graphics2D g2, Component c) {
-		if (SwingUtilities.getAncestorOfClass(CellRendererPane.class, c) != null) {
-			return null;
-		}
-
-		Map oldRenderingHints = null;
-		Map desktopHints = desktopHints(g2);
-		if (desktopHints != null && !desktopHints.isEmpty()) {
-			oldRenderingHints = new HashMap(desktopHints.size());
-			RenderingHints.Key key;
-			for (Iterator i = desktopHints.keySet().iterator(); i.hasNext();) {
-				key = (RenderingHints.Key) i.next();
-				oldRenderingHints.put(key, g2.getRenderingHint(key));
-			}
-			g2.addRenderingHints(desktopHints);
-			if (c != null) {
-				Font font = c.getFont();
-				if (font != null) {
-					if (font.getSize() > 15) {
-						g2.setRenderingHint(
-								RenderingHints.KEY_TEXT_ANTIALIASING,
-								RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-					}
-				}
-			}
-		} else {
-			// the following is temporary until the Apple VM 6.0 supports the
-			// desktop AA hinting settings.
-			if (LookUtils.IS_JAVA_6 && LookUtils.IS_OS_MAC) {
-				g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-						RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-			}
-		}
-		return oldRenderingHints;
-	}
-
 	public static void installDesktopHints(Graphics2D g2, Component c) {
 		if (SwingUtilities.getAncestorOfClass(CellRendererPane.class, c) != null) {
 			return;
@@ -94,13 +58,6 @@ public class RenderingUtils {
 								RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 					}
 				}
-			}
-		} else {
-			// the following is temporary until the Apple VM 6.0 supports the
-			// desktop AA hinting settings.
-			if (LookUtils.IS_JAVA_6 && LookUtils.IS_OS_MAC) {
-				g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-						RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 			}
 		}
 	}
