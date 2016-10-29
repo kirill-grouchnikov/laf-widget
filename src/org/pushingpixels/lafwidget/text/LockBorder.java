@@ -38,13 +38,14 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.UIResource;
 
 import org.pushingpixels.lafwidget.*;
+import org.pushingpixels.lafwidget.utils.BorderWrapper;
 
 /**
  * Border with "lock" indication.
  * 
  * @author Kirill Grouchnikov
  */
-public class LockBorder implements Border, UIResource {
+public class LockBorder implements Border, UIResource, BorderWrapper {
 	/**
 	 * The original (decorated) border.
 	 */
@@ -98,6 +99,7 @@ public class LockBorder implements Border, UIResource {
 		return this.originalBorder.isBorderOpaque();
 	}
 
+	@Override
 	public Border getOriginalBorder() {
 		return originalBorder;
 	}

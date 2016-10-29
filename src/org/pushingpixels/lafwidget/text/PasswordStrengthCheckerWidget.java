@@ -37,8 +37,10 @@ import javax.swing.JPasswordField;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.plaf.BorderUIResource;
+import javax.swing.plaf.BorderUIResource.CompoundBorderUIResource;
 
 import org.pushingpixels.lafwidget.*;
+import org.pushingpixels.lafwidget.utils.BorderWrapper;
 import org.pushingpixels.lafwidget.utils.LafConstants.PasswordStrength;
 
 /**
@@ -54,6 +56,17 @@ public class PasswordStrengthCheckerWidget extends
 	 */
 	protected PropertyChangeListener strengthCheckerListener;
 
+	private static class WrappedBorder extends CompoundBorderUIResource implements BorderWrapper {
+		public WrappedBorder(Border outsideBorder, Border insideBorder) {
+			super(outsideBorder, insideBorder);
+		}
+		
+		@Override
+		public Border getOriginalBorder() {
+			return this.getOutsideBorder();
+		}
+	}
+	
 	/**
 	 * Border with password strength indication.
 	 * 
@@ -63,15 +76,15 @@ public class PasswordStrengthCheckerWidget extends
 		/**
 		 * Gutter width.
 		 */
-		public static final int GUTTER_WIDTH = 5;
-
+		private static final int GUTTER_WIDTH = 5;
+		
 		/*
 		 * (non-Javadoc)
 		 * 
 		 * @see javax.swing.border.Border#isBorderOpaque()
 		 */
 		public boolean isBorderOpaque() {
-			return true;
+			return false;
 		}
 
 		/*
@@ -85,11 +98,9 @@ public class PasswordStrengthCheckerWidget extends
 				return new Insets(0, 0, 0, 0);
 			} else {
 				if (c.getComponentOrientation().isLeftToRight())
-					return new Insets(0, 0, 0,
-							StrengthCheckedBorder.GUTTER_WIDTH);
+					return new Insets(0, 0, 0, StrengthCheckedBorder.GUTTER_WIDTH);
 				else
-					return new Insets(0, StrengthCheckedBorder.GUTTER_WIDTH, 0,
-							0);
+					return new Insets(0, StrengthCheckedBorder.GUTTER_WIDTH, 0, 0);
 			}
 		}
 
@@ -133,21 +144,17 @@ public class PasswordStrengthCheckerWidget extends
 	public void installListeners() {
 		this.strengthCheckerListener = new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
-				if (LafWidget.PASSWORD_STRENGTH_CHECKER.equals(evt
-						.getPropertyName())) {
+				if (LafWidget.PASSWORD_STRENGTH_CHECKER.equals(evt.getPropertyName())) {
 					Object newValue = evt.getNewValue();
 					Object oldValue = evt.getOldValue();
 					if ((newValue != null)
 							&& (newValue instanceof PasswordStrengthChecker)
 							&& (!(oldValue instanceof PasswordStrengthChecker))) {
-						jcomp
-								.setBorder(new BorderUIResource.CompoundBorderUIResource(
-										jcomp.getBorder(),
-										new StrengthCheckedBorder()));
+						jcomp.setBorder(new WrappedBorder(jcomp.getBorder(), 
+								new StrengthCheckedBorder()));
 					} else {
 						// restore core border
-						Border coreBorder = UIManager
-								.getBorder("PasswordField.border");
+						Border coreBorder = UIManager.getBorder("PasswordField.border");
 						jcomp.setBorder(coreBorder);
 						jcomp.setToolTipText(null);
 					}
