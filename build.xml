@@ -58,7 +58,6 @@
 
 	<path id="laf-widget.module.classpath">
 		<path refid="${module.jdk.classpath.laf-widget}" />
-		<pathelement location="${laf-widget.lib.dir}/asm-all-2.2.2.jar" />
 		<pathelement location="${laf-widget.lib.dir}/ant.jar" />
 		<pathelement location="${laf-widget.lib.dir}/trident.jar" />
 	</path>

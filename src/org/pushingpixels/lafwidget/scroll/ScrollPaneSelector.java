@@ -29,20 +29,41 @@
  */
 package org.pushingpixels.lafwidget.scroll;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Insets;
+import java.awt.LayoutManager;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.event.ContainerAdapter;
+import java.awt.event.ContainerEvent;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JViewport;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.event.MouseInputListener;
 
 import org.pushingpixels.lafwidget.LafWidgetRepository;
 import org.pushingpixels.lafwidget.LafWidgetUtilities2;
 import org.pushingpixels.lafwidget.animation.AnimationConfigurationManager;
+import org.pushingpixels.lafwidget.contrib.intellij.UIUtil;
 import org.pushingpixels.lafwidget.preview.PreviewPainter;
 import org.pushingpixels.trident.Timeline;
 import org.pushingpixels.trident.Timeline.TimelineState;
@@ -65,28 +86,7 @@ import org.pushingpixels.trident.callback.UIThreadTimelineCallbackAdapter;
 public class ScrollPaneSelector extends JComponent {
 	// static final fields
 	private static final double MAX_SIZE = 200;
-	// private static final Icon LAUNCH_SELECTOR_ICON = new Icon() {
-	// public void paintIcon(Component c, Graphics g, int x, int y) {
-	// Color tmpColor = g.getColor();
-	// g.setColor(Color.BLACK);
-	// g.drawRect(2, 2, 10, 10);
-	// g.drawRect(4, 5, 6, 4);
-	// g.setColor(tmpColor);
-	// }
-	//
-	// public int getIconWidth() {
-	// return 15;
-	// }
-	//
-	// public int getIconHeight() {
-	// return 15;
-	// }
-	// };
-	// private static Map theInstalledScrollPaneSelectors = new HashMap();
 	private static final String COMPONENT_ORIENTATION = "componentOrientation";
-
-	// private static final String HAS_BEEN_UNINSTALLED =
-	// "lafwidget.internal.scrollPaneSelector.hasBeenUninstalled";
 
 	// member fields
 	private LayoutManager theFormerLayoutManager;
@@ -114,8 +114,7 @@ public class ScrollPaneSelector extends JComponent {
 		theStartPoint = null;
 		theScale = 0.0;
 		theButton = new JButton();
-		LafWidgetRepository.getRepository().getLafSupport().markButtonAsFlat(
-				theButton);
+		LafWidgetRepository.getRepository().getLafSupport().markButtonAsFlat(theButton);
 		theButton.setFocusable(false);
 		theButton.setFocusPainted(false);
 
@@ -166,16 +165,14 @@ public class ScrollPaneSelector extends JComponent {
 		thePopupMenu = new JPopupMenu();
 		thePopupMenu.setLayout(new BorderLayout());
 		thePopupMenu.add(this, BorderLayout.CENTER);
-		propertyChangeListener = new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-				if (theScrollPane == null)
-					return;
-				if ("componentOrientation".equals(evt.getPropertyName())) {
-					theScrollPane.setCorner(JScrollPane.LOWER_LEADING_CORNER,
-							null);
-					theScrollPane.setCorner(JScrollPane.LOWER_TRAILING_CORNER,
-							theButton);
-				}
+		propertyChangeListener = (PropertyChangeEvent evt) -> {
+			if (theScrollPane == null)
+				return;
+			if ("componentOrientation".equals(evt.getPropertyName())) {
+				theScrollPane.setCorner(JScrollPane.LOWER_LEADING_CORNER,
+						null);
+				theScrollPane.setCorner(JScrollPane.LOWER_TRAILING_CORNER,
+						theButton);
 			}
 		};
 		theViewPortViewListener = new ContainerAdapter() {
@@ -188,17 +185,15 @@ public class ScrollPaneSelector extends JComponent {
 						: null;
 			}
 		};
-		thePopupMenu.addPropertyChangeListener(new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-				if ("visible".equals(evt.getPropertyName())) {
-					if (!thePopupMenu.isVisible()) {
-						setCursor(Cursor
-								.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-						if (toRestoreOriginal) {
-							int deltaX = (int) ((thePrevPoint.x - theStartPoint.x) / theScale);
-							int deltaY = (int) ((thePrevPoint.y - theStartPoint.y) / theScale);
-							scroll(-deltaX, -deltaY, true);
-						}
+		thePopupMenu.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+			if ("visible".equals(evt.getPropertyName())) {
+				if (!thePopupMenu.isVisible()) {
+					setCursor(Cursor
+							.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+					if (toRestoreOriginal) {
+						int deltaX = (int) ((thePrevPoint.x - theStartPoint.x) / theScale);
+						int deltaY = (int) ((thePrevPoint.y - theStartPoint.y) / theScale);
+						scroll(-deltaX, -deltaY, true);
 					}
 				}
 			}
@@ -211,9 +206,10 @@ public class ScrollPaneSelector extends JComponent {
 		if (theImage == null || theRectangle == null)
 			return new Dimension();
 		Insets insets = getInsets();
-		return new Dimension(theImage.getWidth(null) + insets.left
-				+ insets.right, theImage.getHeight(null) + insets.top
-				+ insets.bottom);
+		int scaleFactor = UIUtil.isRetina() ? 2 : 1;
+		return new Dimension(
+				theImage.getWidth() / scaleFactor + insets.left + insets.right, 
+				theImage.getHeight() / scaleFactor + insets.top + insets.bottom);
 	}
 
 	@Override
@@ -227,7 +223,9 @@ public class ScrollPaneSelector extends JComponent {
 		int yOffset = insets.top;
 		int availableWidth = getWidth() - insets.left - insets.right;
 		int availableHeight = getHeight() - insets.top - insets.bottom;
-		g.drawImage(theImage, xOffset, yOffset, null);
+		int scaleFactor = UIUtil.isRetina() ? 2 : 1;
+		g.drawImage(theImage, xOffset, yOffset, theImage.getWidth() / scaleFactor,
+				theImage.getHeight() / scaleFactor, null);
 
 		Color tmpColor = g.getColor();
 		Area area = new Area(new Rectangle(xOffset, yOffset, availableWidth,
@@ -292,24 +290,6 @@ public class ScrollPaneSelector extends JComponent {
 				0))
 			return;
 
-		// if (previewPainter == null) {
-		// double compWidth = theComponent.getWidth();
-		// double compHeight = theComponent.getHeight();
-		// double scaleX = MAX_SIZE / compWidth;
-		// double scaleY = MAX_SIZE / compHeight;
-		// theScale = Math.min(scaleX, scaleY);
-		// theImage = new BufferedImage(
-		// (int) (theComponent.getWidth() * theScale),
-		// (int) (theComponent.getHeight() * theScale),
-		// BufferedImage.TYPE_INT_RGB);
-		//
-		// Graphics2D g = theImage.createGraphics();
-		// g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-		// RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		// g.scale(theScale, theScale);
-		// theComponent.paint(g);
-		// g.dispose();
-		// } else {
 		Dimension pDimension = previewPainter.getPreviewWindowDimension(
 				theComponent.getParent(), theComponent, 0);
 		double compWidth = theComponent.getWidth();
@@ -317,15 +297,14 @@ public class ScrollPaneSelector extends JComponent {
 		double scaleX = pDimension.getWidth() / compWidth;
 		double scaleY = pDimension.getHeight() / compHeight;
 		theScale = Math.min(scaleX, scaleY);
-		theImage = new BufferedImage(
-				(int) (theComponent.getWidth() * theScale), (int) (theComponent
-						.getHeight() * theScale), BufferedImage.TYPE_INT_RGB);
+		int previewWidth = (int) (theComponent.getWidth() * theScale);
+		int previewHeight = (int) (theComponent.getHeight() * theScale);
+		theImage = LafWidgetUtilities2.getBlankImage(previewWidth, previewHeight);
 
 		Graphics2D g = theImage.createGraphics();
 		previewPainter.previewComponent(null, theComponent, 0, g, 0, 0,
 				theImage.getWidth(), theImage.getHeight());
 		g.dispose();
-		// }
 
 		theStartRectangle = theComponent.getVisibleRect();
 		Insets insets = getInsets();
@@ -359,25 +338,6 @@ public class ScrollPaneSelector extends JComponent {
 		thePopupMenu.show(theButton, popupLocation.x, popupLocation.y);
 	}
 
-	private void moveRectangle(int aDeltaX, int aDeltaY) {
-		if (theStartRectangle == null)
-			return;
-
-		Insets insets = getInsets();
-		Rectangle newRect = new Rectangle(theStartRectangle);
-		newRect.x += aDeltaX;
-		newRect.y += aDeltaY;
-		newRect.x = Math.min(Math.max(newRect.x, insets.left), getWidth()
-				- insets.right - newRect.width);
-		newRect.y = Math.min(Math.max(newRect.y, insets.right), getHeight()
-				- insets.bottom - newRect.height);
-		Rectangle clip = new Rectangle();
-		Rectangle.union(theRectangle, newRect, clip);
-		clip.grow(2, 2);
-		theRectangle = newRect;
-		paintImmediately(clip);
-	}
-
 	private void syncRectangle() {
 		JViewport viewport = this.theScrollPane.getViewport();
 		Rectangle viewRect = viewport.getViewRect();
@@ -394,7 +354,6 @@ public class ScrollPaneSelector extends JComponent {
 		clip.grow(2, 2);
 		theRectangle = newRect;
 
-		// System.out.println(viewRect + "-->" + theRectangle);
 		paintImmediately(clip);
 	}
 

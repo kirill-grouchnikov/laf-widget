@@ -31,12 +31,19 @@ package org.pushingpixels.lafwidget;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Transparency;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
 import javax.swing.JPasswordField;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 
+import org.pushingpixels.lafwidget.contrib.intellij.JBHiDPIScaledImage;
+import org.pushingpixels.lafwidget.contrib.intellij.UIUtil;
 import org.pushingpixels.lafwidget.preview.PreviewPainter;
 import org.pushingpixels.lafwidget.tabbed.TabPreviewPainter;
 import org.pushingpixels.lafwidget.text.PasswordStrengthChecker;
@@ -124,5 +131,16 @@ public class LafWidgetUtilities2 {
 		if ((obj != null) && (obj instanceof PasswordStrengthChecker))
 			return (PasswordStrengthChecker) obj;
 		return null;
+	}
+
+	public static BufferedImage getBlankImage(int width, int height) {
+		if (UIUtil.isRetina()) {
+			return new JBHiDPIScaledImage(width, height, Transparency.TRANSLUCENT);
+		} else {
+			GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			GraphicsDevice d = e.getDefaultScreenDevice();
+			GraphicsConfiguration c = d.getDefaultConfiguration();
+			return c.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+		}
 	}
 }

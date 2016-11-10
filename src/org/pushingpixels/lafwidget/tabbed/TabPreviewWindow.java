@@ -37,6 +37,7 @@ import javax.swing.*;
 
 import org.pushingpixels.lafwidget.*;
 import org.pushingpixels.lafwidget.animation.AnimationConfigurationManager;
+import org.pushingpixels.lafwidget.icon.HiDpiAwareIcon;
 import org.pushingpixels.lafwidget.tabbed.TabPreviewThread.TabPreviewInfo;
 import org.pushingpixels.trident.Timeline;
 
@@ -191,7 +192,7 @@ public class TabPreviewWindow extends JWindow implements ActionListener {
 								currTabPreviewInfo.getPreviewWidth(),
 								currTabPreviewInfo.getPreviewHeight());
 				TabPreviewWindow.this.getContentPane().removeAll();
-				final JLabel previewLabel = new PreviewLabel(new ImageIcon(
+				final JLabel previewLabel = new PreviewLabel(new HiDpiAwareIcon(
 						componentSnap));
 				TabPreviewWindow.this
 						.addComponentListener(new ComponentAdapter() {
@@ -328,13 +329,12 @@ public class TabPreviewWindow extends JWindow implements ActionListener {
 	 * Cancels the currently pending preview request.
 	 */
 	public static synchronized void cancelPreviewRequest() {
-		// System.err.println("Cancel");
 		currTabPreviewInfo = null;
 		if ((currTabPreviewTimer != null) && currTabPreviewTimer.isRunning()) {
 			currTabPreviewTimer.stop();
 			currTabPreviewTimer = null;
 		}
 		if (instance != null)
-			instance.dispose();// setVisible(false);
+			instance.dispose();
 	}
 }

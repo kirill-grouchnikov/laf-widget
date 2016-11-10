@@ -108,8 +108,7 @@ public class TabHoverPreviewWidget extends LafWidgetAdapter<JTabbedPane> {
 			if (e.getSource() != jcomp)
 				return;
 
-			LafWidgetSupport lafSupport = LafWidgetRepository.getRepository()
-					.getLafSupport();
+			LafWidgetSupport lafSupport = LafWidgetRepository.getRepository().getLafSupport();
 
 			int currRolledOver = 0;
 

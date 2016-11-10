@@ -29,12 +29,16 @@
  */
 package org.pushingpixels.lafwidget.tabbed;
 
-import java.awt.*;
+import java.awt.AlphaComposite;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JTabbedPane;
 
 import org.pushingpixels.lafwidget.LafWidgetUtilities;
+import org.pushingpixels.lafwidget.contrib.intellij.UIUtil;
 
 /**
  * Default implementation of the tab preview painter. The tab preview is a
@@ -63,13 +67,8 @@ public class DefaultTabPreviewPainter extends TabPreviewPainter {
 		return tabPane.isEnabledAt(tabIndex);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.pushingpixels.lafwidget.tabbed.TabPreviewPainter#previewTab(javax.swing.JTabbedPane,
-	 *      int, java.awt.Graphics, int, int, int, int)
-	 */
-	public void previewTab(JTabbedPane tabPane, int tabIndex, Graphics g,
+	@Override
+	public void previewTab(JTabbedPane tabPane, int tabIndex, BufferedImage bufferedImage,
 			int x, int y, int w, int h) {
 		Component tabComponent = tabPane.getComponentAt(tabIndex);
 		if (tabComponent == null)
@@ -91,7 +90,8 @@ public class DefaultTabPreviewPainter extends TabPreviewPainter {
 					/ (double) compHeight);
 			// fix for issue 177 in Substance - disabled tabs painted in
 			// 50% opacity.
-			Graphics2D g2 = (Graphics2D) g.create();
+			Graphics2D g2 = (Graphics2D) bufferedImage.createGraphics();
+			int scaleFactor = UIUtil.isRetina() ? 2 : 1;
 			if (!tabPane.isEnabledAt(tabIndex)) {
 				g2.setComposite(AlphaComposite.getInstance(
 						AlphaComposite.SRC_OVER, 0.5f));
@@ -102,8 +102,9 @@ public class DefaultTabPreviewPainter extends TabPreviewPainter {
 				int dx = (w - sdWidth) / 2;
 				int dy = (h - sdHeight) / 2;
 
-				g2.drawImage(LafWidgetUtilities.createThumbnail(tempCanvas,
-						sdWidth), dx, dy, null);
+				BufferedImage thumbnail = LafWidgetUtilities.createThumbnail(tempCanvas, sdWidth);
+				g2.drawImage(thumbnail, dx, dy, thumbnail.getWidth() / scaleFactor,
+						thumbnail.getHeight() / scaleFactor, null);
 
 			} else {
 				// System.out.println("Putting " + frame.hashCode() + "

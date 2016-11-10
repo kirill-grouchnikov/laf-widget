@@ -41,6 +41,7 @@ import javax.swing.text.JTextComponent;
 
 import org.pushingpixels.lafwidget.animation.AnimationConfigurationManager;
 import org.pushingpixels.lafwidget.animation.AnimationFacet;
+import org.pushingpixels.lafwidget.contrib.intellij.UIUtil;
 
 /**
  * Various utility functions.
@@ -121,18 +122,18 @@ public class LafWidgetUtilities {
 		int width = image.getWidth();
 		BufferedImage thumb = image;
 
+		int scaleFactor = UIUtil.isRetina() ? 2 : 1;
 		do {
 			width /= 2;
 			if (width < requestedThumbWidth) {
 				width = requestedThumbWidth;
 			}
 
-			BufferedImage temp = new BufferedImage(width,
-					(int) (width / ratio), BufferedImage.TYPE_INT_ARGB);
+			BufferedImage temp = LafWidgetUtilities2.getBlankImage(width,  (int) (width / ratio));
 			Graphics2D g2 = temp.createGraphics();
 			g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
 					RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-			g2.drawImage(thumb, 0, 0, temp.getWidth(), temp.getHeight(), null);
+			g2.drawImage(thumb, 0, 0, temp.getWidth() / scaleFactor, temp.getHeight() / scaleFactor, null);
 			g2.dispose();
 
 			thumb = temp;
@@ -537,24 +538,6 @@ public class LafWidgetUtilities {
 		if (comp instanceof JMenuItem)
 			return false;
 		return (SwingUtilities.getAncestorOfClass(CellRendererPane.class, comp) != null);
-	}
-
-	/**
-	 * Tests UI threading violations on changing the state the specified
-	 * component.
-	 * 
-	 * @param comp
-	 *            Component.
-	 * @throws UiThreadingViolationException
-	 *             If the component is changing state off Event Dispatch Thread.
-	 */
-	public static void testComponentStateChangeThreadingViolation(Component comp) {
-		if (!SwingUtilities.isEventDispatchThread()) {
-			UiThreadingViolationException uiThreadingViolationError = new UiThreadingViolationException(
-					"Component state change must be done on Event Dispatch Thread");
-			uiThreadingViolationError.printStackTrace(System.err);
-			throw uiThreadingViolationError;
-		}
 	}
 
 	/**

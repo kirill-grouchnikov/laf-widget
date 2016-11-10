@@ -44,14 +44,15 @@ import javax.swing.event.MouseInputAdapter;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
 import org.pushingpixels.lafwidget.*;
+import org.pushingpixels.lafwidget.contrib.intellij.UIUtil;
+import org.pushingpixels.lafwidget.icon.HiDpiAwareIcon;
 
 /**
  * Adds internal frame thumbnail preview on desktop icon mouse hover.
  * 
  * @author Kirill Grouchnikov
  */
-public class DesktopIconHoverPreviewWidget extends
-		LafWidgetAdapter<JDesktopIcon> {
+public class DesktopIconHoverPreviewWidget extends LafWidgetAdapter<JDesktopIcon> {
 	/**
 	 * The component that initiates the desktop icon preview (when the mouse
 	 * hover above it).
@@ -66,7 +67,6 @@ public class DesktopIconHoverPreviewWidget extends
 	/**
 	 * Snapshot map.
 	 */
-	// private static WeakHashMap snapshots = new WeakHashMap();
 	private BufferedImage snapshot;
 
 	/**
@@ -94,35 +94,30 @@ public class DesktopIconHoverPreviewWidget extends
 		public void mouseEntered(MouseEvent e) {
 			if (DesktopIconHoverPreviewWidget.this.isInDrag)
 				return;
-			// final BufferedImage previewImage = DesktopIconHoverPreviewWidget
-			// .getSnapshot(DesktopIconHoverPreviewWidget.this.desktopIcon
-			// .getInternalFrame());
 			BufferedImage previewImage = snapshot;
 			if (previewImage != null) {
-				DesktopIconHoverPreviewWidget.this.previewWindow
-						.getContentPane().removeAll();
-				JLabel previewLabel = new JLabel(new ImageIcon(previewImage));
-				// previewLabel.setBorder(new SubstanceBorder());
-				DesktopIconHoverPreviewWidget.this.previewWindow
-						.getContentPane()
-						.add(previewLabel, BorderLayout.CENTER);
+				int scaleFactor = UIUtil.isRetina() ? 2 : 1;
+				DesktopIconHoverPreviewWidget.this.previewWindow.getContentPane().removeAll();
+				JLabel previewLabel = new JLabel(new HiDpiAwareIcon(previewImage));
+				DesktopIconHoverPreviewWidget.this.previewWindow.getContentPane().add(previewLabel,
+						BorderLayout.CENTER);
 				DesktopIconHoverPreviewWidget.this.previewWindow.setSize(
-						previewImage.getWidth(), previewImage.getHeight());
+						previewImage.getWidth() / scaleFactor,
+						previewImage.getHeight() / scaleFactor);
 				DesktopIconHoverPreviewWidget.this.syncPreviewWindow(true);
-				DesktopIconHoverPreviewWidget.this.previewWindow
-						.setVisible(true);
+				DesktopIconHoverPreviewWidget.this.previewWindow.setVisible(true);
 			}
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e) {
 			DesktopIconHoverPreviewWidget.this.isInDrag = false;
-			DesktopIconHoverPreviewWidget.this.previewWindow.dispose();// setVisible(false);
+			DesktopIconHoverPreviewWidget.this.previewWindow.dispose();
 		}
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			DesktopIconHoverPreviewWidget.this.previewWindow.dispose();// setVisible(false);
+			DesktopIconHoverPreviewWidget.this.previewWindow.dispose();
 		}
 
 		@Override
@@ -137,7 +132,7 @@ public class DesktopIconHoverPreviewWidget extends
 			DesktopIconHoverPreviewWidget.this.isInDrag = true;
 			if (DesktopIconHoverPreviewWidget.this.previewWindow.isVisible()) {
 				DesktopIconHoverPreviewWidget.this.syncPreviewWindow(false);
-				DesktopIconHoverPreviewWidget.this.previewWindow.dispose();// setVisible(false);
+				DesktopIconHoverPreviewWidget.this.previewWindow.dispose();
 			}
 		}
 	}
@@ -160,20 +155,16 @@ public class DesktopIconHoverPreviewWidget extends
 	 */
 	@Override
 	public void installListeners() {
-		this.internalFramePropertyListener = new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-				if ("ancestor".equals(evt.getPropertyName())) {
-					updateSnapshot(jcomp.getInternalFrame());
-				}
+		this.internalFramePropertyListener = (PropertyChangeEvent evt) -> {
+			if ("ancestor".equals(evt.getPropertyName())) {
+				updateSnapshot(jcomp.getInternalFrame());
 			}
 		};
-		jcomp.getInternalFrame().addPropertyChangeListener(
-				this.internalFramePropertyListener);
+		jcomp.getInternalFrame().addPropertyChangeListener(this.internalFramePropertyListener);
 
 		this.titleMouseHandler = new TitleMouseHandler();
 
-		LafWidgetSupport lafSupport = LafWidgetRepository.getRepository()
-				.getLafSupport();
+		LafWidgetSupport lafSupport = LafWidgetRepository.getRepository().getLafSupport();
 		this.compToHover = lafSupport.getComponentForHover(jcomp);
 
 		if (this.compToHover != null) {
@@ -189,8 +180,7 @@ public class DesktopIconHoverPreviewWidget extends
 	 */
 	@Override
 	public void uninstallListeners() {
-		jcomp.getInternalFrame().removePropertyChangeListener(
-				this.internalFramePropertyListener);
+		jcomp.getInternalFrame().removePropertyChangeListener(this.internalFramePropertyListener);
 		this.internalFramePropertyListener = null;
 
 		if (this.compToHover != null) {
@@ -211,8 +201,7 @@ public class DesktopIconHoverPreviewWidget extends
 			int x = jcomp.getLocationOnScreen().x;
 			int y = jcomp.getLocationOnScreen().y;
 
-			this.previewWindow.setLocation(x, y
-					- this.previewWindow.getHeight());
+			this.previewWindow.setLocation(x, y - this.previewWindow.getHeight());
 
 		}
 	}
@@ -237,8 +226,7 @@ public class DesktopIconHoverPreviewWidget extends
 		int dx = 0;
 		int dy = 0;
 		// Now we need to remove the border and the title pane :)
-		Border internalFrameBorder = UIManager
-				.getBorder("InternalFrame.border");
+		Border internalFrameBorder = UIManager.getBorder("InternalFrame.border");
 		Insets borderInsets = internalFrameBorder.getBorderInsets(frame);
 		dx += borderInsets.left;
 		dy += borderInsets.top;
@@ -256,8 +244,7 @@ public class DesktopIconHoverPreviewWidget extends
 		// fix for defect 112 - checking frame height and width
 		if ((frameWidth > 0) && (frameHeight > 0)) {
 			// draw frame (note the canvas translation)
-			BufferedImage tempCanvas = new BufferedImage(frameWidth,
-					frameHeight, BufferedImage.TYPE_INT_ARGB);
+			BufferedImage tempCanvas = new BufferedImage(frameWidth, frameHeight, BufferedImage.TYPE_INT_ARGB);
 			Graphics tempCanvasGraphics = tempCanvas.getGraphics();
 			tempCanvasGraphics.translate(-dx, -dy);
 			Map<Component, Boolean> dbSnapshot = new HashMap<Component, Boolean>();
@@ -269,30 +256,14 @@ public class DesktopIconHoverPreviewWidget extends
 			int maxHeight = maxWidth;
 
 			// check if need to scale down
-			double coef = Math.min((double) maxWidth / (double) frameWidth,
+			double coef = Math.min((double) maxWidth / (double) frameWidth, 
 					(double) maxHeight / (double) frameHeight);
 			if (coef < 1.0) {
 				int sdWidth = (int) (coef * frameWidth);
-				// int sdHeight = (int) (coef * frameHeight);
-				// BufferedImage scaledDown = new BufferedImage(sdWidth,
-				// sdHeight,
-				// BufferedImage.TYPE_INT_ARGB);
-				// Graphics g = scaledDown.getGraphics();
-				// g.drawImage(tempCanvas, 0, 0, sdWidth, sdHeight, 0, 0,
-				// frameWidth, frameHeight, null);
-				BufferedImage scaledDown = LafWidgetUtilities.createThumbnail(
-						tempCanvas, sdWidth);
-				// System.out.println("Putting " + frame.hashCode() + "
-				// -> " + scaledDown.hashCode());
+				BufferedImage scaledDown = LafWidgetUtilities.createThumbnail(tempCanvas, sdWidth);
 				snapshot = scaledDown;
-				// DesktopIconHoverPreviewWidget.snapshots.put(frame,
-				// scaledDown);
 			} else {
-				// System.out.println("Putting " + frame.hashCode() + "
-				// -> " + snapshot.hashCode());
 				snapshot = tempCanvas;
-				// DesktopIconHoverPreviewWidget.snapshots.put(frame,
-				// tempCanvas);
 			}
 		}
 	}
@@ -305,16 +276,6 @@ public class DesktopIconHoverPreviewWidget extends
 	 * @return The snapshot of the specified internal frame.
 	 */
 	public synchronized BufferedImage getSnapshot(JInternalFrame frame) {
-		// BufferedImage result = (BufferedImage)
-		// DesktopIconHoverPreviewWidget.snapshots
-		// .get(frame);
-		// if (result != null)
-		// return result;
-		// // frame.setVisible(true);
-		// // updateSnapshot(frame);
-		// // frame.setVisible(false);
-		// // return snapshots.get(frame);
-		// return null;
 		return this.snapshot;
 	}
 

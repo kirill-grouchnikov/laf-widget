@@ -35,6 +35,10 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+import org.pushingpixels.lafwidget.scroll.svg.autoscroll_all;
+import org.pushingpixels.lafwidget.scroll.svg.autoscroll_h;
+import org.pushingpixels.lafwidget.scroll.svg.autoscroll_v;
+
 /**
  * Christopher Deckers (chrriis@nextencia.net) http://www.nextencia.net
  * 
@@ -209,10 +213,9 @@ public class AutoScrollActivator {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			if (e.getButton() != 2) {
-				return;
+			if (e.isPopupTrigger()) {
+				autoScrollActivator.activateAutoScroll(e);
 			}
-			autoScrollActivator.activateAutoScroll(e);
 		}
 	}
 
@@ -225,16 +228,12 @@ public class AutoScrollActivator {
 		scrollPane.addMouseListener(new AutoScrollMouseListener(this));
 	}
 
-	protected static final ImageIcon H_IMAGE_ICON = new ImageIcon(
-			AutoScrollActivator.class.getResource("resource/autoscroll_h.png"));
-	protected static final ImageIcon V_IMAGE_ICON = new ImageIcon(
-			AutoScrollActivator.class.getResource("resource/autoscroll_v.png"));
-	protected static final ImageIcon HV_IMAGE_ICON = new ImageIcon(
-			AutoScrollActivator.class
-					.getResource("resource/autoscroll_all.png"));
+	protected static final Icon H_IMAGE_ICON = autoscroll_h.of(28, 28);
+	protected static final Icon V_IMAGE_ICON = autoscroll_v.of(28, 28);
+	protected static final Icon HV_IMAGE_ICON = autoscroll_all.of(28, 28);
 
-	protected ImageIcon getAutoScrollIcon() {
-		ImageIcon icon;
+	protected Icon getAutoScrollIcon() {
+		Icon icon;
 		if (scrollPane.getHorizontalScrollBar().isVisible()) {
 			if (scrollPane.getVerticalScrollBar().isVisible()) {
 				icon = HV_IMAGE_ICON;

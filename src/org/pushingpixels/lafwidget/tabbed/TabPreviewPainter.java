@@ -29,7 +29,10 @@
  */
 package org.pushingpixels.lafwidget.tabbed;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
@@ -49,8 +52,8 @@ public abstract class TabPreviewPainter {
 	 *            Tabbed pane.
 	 * @param tabIndex
 	 *            tabIndex Tab index for the preview paint.
-	 * @param g
-	 *            Graphics context.
+	 * @param bufferedImage
+	 *            Buffered image to draw the preview into.
 	 * @param x
 	 *            X coordinate of the preview area.
 	 * @param y
@@ -60,7 +63,7 @@ public abstract class TabPreviewPainter {
 	 * @param h
 	 *            Height of the preview area.
 	 */
-	public void previewTab(JTabbedPane tabPane, int tabIndex, Graphics g,
+	public void previewTab(JTabbedPane tabPane, int tabIndex, BufferedImage bufferedImage,
 			int x, int y, int w, int h) {
 	}
 

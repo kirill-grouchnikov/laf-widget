@@ -46,6 +46,11 @@ import javax.swing.text.JTextComponent;
 
 import org.pushingpixels.lafwidget.LafWidgetAdapter;
 import org.pushingpixels.lafwidget.LafWidgetUtilities;
+import org.pushingpixels.lafwidget.text.svg.Edit_copy;
+import org.pushingpixels.lafwidget.text.svg.Edit_cut;
+import org.pushingpixels.lafwidget.text.svg.Edit_delete_2;
+import org.pushingpixels.lafwidget.text.svg.Edit_paste;
+import org.pushingpixels.lafwidget.text.svg.Edit_select_all;
 
 /**
  * Adds edit context menu on text components.
@@ -104,8 +109,7 @@ public class EditContextMenuWidget extends LafWidgetAdapter<JTextComponent> {
 				editMenu.add(new DeleteAction());
 				editMenu.add(new SelectAllAction());
 
-				Point pt = SwingUtilities.convertPoint(e.getComponent(), e
-						.getPoint(), jcomp);
+				Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), jcomp);
 				editMenu.show(jcomp, pt.x, pt.y);
 			}
 		};
@@ -133,18 +137,14 @@ public class EditContextMenuWidget extends LafWidgetAdapter<JTextComponent> {
 		 * Creates new <code>Paste</code> action.
 		 */
 		public PasteAction() {
-			super(LafWidgetUtilities.getResourceBundle(jcomp).getString(
-					"EditMenu.paste"), new ImageIcon(
-					EditContextMenuWidget.class.getClassLoader().getResource(
-							"org/pushingpixels/lafwidget/text/edit-paste.png")));
+			super(LafWidgetUtilities.getResourceBundle(jcomp).getString("EditMenu.paste"), Edit_paste.of(16, 16));
 		}
 
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent
-		 * )
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.
+		 * ActionEvent )
 		 */
 		public void actionPerformed(ActionEvent e) {
 			jcomp.paste();
@@ -158,8 +158,7 @@ public class EditContextMenuWidget extends LafWidgetAdapter<JTextComponent> {
 		@Override
 		public boolean isEnabled() {
 			if (jcomp.isEditable() && jcomp.isEnabled()) {
-				Transferable contents = Toolkit.getDefaultToolkit()
-						.getSystemClipboard().getContents(this);
+				Transferable contents = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this);
 				return contents.isDataFlavorSupported(DataFlavor.stringFlavor);
 			} else
 				return false;
@@ -176,22 +175,15 @@ public class EditContextMenuWidget extends LafWidgetAdapter<JTextComponent> {
 		 * Creates new <code>Select All</code> action.
 		 */
 		public SelectAllAction() {
-			super(
-					LafWidgetUtilities.getResourceBundle(jcomp).getString(
-							"EditMenu.selectAll"),
-					new ImageIcon(
-							EditContextMenuWidget.class
-									.getClassLoader()
-									.getResource(
-											"org/pushingpixels/lafwidget/text/edit-select-all.png")));
+			super(LafWidgetUtilities.getResourceBundle(jcomp).getString("EditMenu.selectAll"),
+					Edit_select_all.of(16, 16));
 		}
 
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent
-		 * )
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.
+		 * ActionEvent )
 		 */
 		public void actionPerformed(ActionEvent e) {
 			jcomp.selectAll();
@@ -218,22 +210,15 @@ public class EditContextMenuWidget extends LafWidgetAdapter<JTextComponent> {
 		 * Creates new <code>Delete</code> action.
 		 */
 		public DeleteAction() {
-			super(
-					LafWidgetUtilities.getResourceBundle(jcomp).getString(
-							"EditMenu.delete"),
-					new ImageIcon(
-							EditContextMenuWidget.class
-									.getClassLoader()
-									.getResource(
-											"org/pushingpixels/lafwidget/text/edit-delete.png")));
+			super(LafWidgetUtilities.getResourceBundle(jcomp).getString("EditMenu.delete"),
+					Edit_delete_2.of(16, 16));
 		}
 
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent
-		 * )
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.
+		 * ActionEvent )
 		 */
 		public void actionPerformed(ActionEvent e) {
 			jcomp.replaceSelection(null);
@@ -246,8 +231,7 @@ public class EditContextMenuWidget extends LafWidgetAdapter<JTextComponent> {
 		 */
 		@Override
 		public boolean isEnabled() {
-			return jcomp.isEditable() && jcomp.isEnabled()
-					&& (jcomp.getSelectedText() != null);
+			return jcomp.isEditable() && jcomp.isEnabled() && (jcomp.getSelectedText() != null);
 		}
 	}
 
@@ -261,18 +245,15 @@ public class EditContextMenuWidget extends LafWidgetAdapter<JTextComponent> {
 		 * Creates new <code>Cut</code> action.
 		 */
 		public CutAction() {
-			super(LafWidgetUtilities.getResourceBundle(jcomp).getString(
-					"EditMenu.cut"), new ImageIcon(EditContextMenuWidget.class
-					.getClassLoader().getResource(
-							"org/pushingpixels/lafwidget/text/edit-cut.png")));
+			super(LafWidgetUtilities.getResourceBundle(jcomp).getString("EditMenu.cut"),
+					Edit_cut.of(16, 16));
 		}
 
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent
-		 * )
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.
+		 * ActionEvent )
 		 */
 		public void actionPerformed(ActionEvent e) {
 			jcomp.cut();
@@ -285,8 +266,7 @@ public class EditContextMenuWidget extends LafWidgetAdapter<JTextComponent> {
 		 */
 		@Override
 		public boolean isEnabled() {
-			return jcomp.isEditable() && jcomp.isEnabled()
-					&& (jcomp.getSelectedText() != null);
+			return jcomp.isEditable() && jcomp.isEnabled() && (jcomp.getSelectedText() != null);
 		}
 	}
 
@@ -300,18 +280,15 @@ public class EditContextMenuWidget extends LafWidgetAdapter<JTextComponent> {
 		 * Creates new <code>Copy</code> action.
 		 */
 		public CopyAction() {
-			super(LafWidgetUtilities.getResourceBundle(jcomp).getString(
-					"EditMenu.copy"), new ImageIcon(EditContextMenuWidget.class
-					.getClassLoader().getResource(
-							"org/pushingpixels/lafwidget/text/edit-copy.png")));
+			super(LafWidgetUtilities.getResourceBundle(jcomp).getString("EditMenu.copy"),
+					Edit_copy.of(16, 16));
 		}
 
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent
-		 * )
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.
+		 * ActionEvent )
 		 */
 		public void actionPerformed(ActionEvent e) {
 			jcomp.copy();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2008 Laf-Widget Kirill Grouchnikov. All Rights Reserved.
+ * Copyright (c) 2005-2016 Laf-Widget Kirill Grouchnikov. All Rights Reserved.
  *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions are met:
@@ -27,22 +27,10 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
  */
-package test.check.asm;
+package org.pushingpixels.lafwidget.icon;
 
-import java.awt.Graphics;
+import java.awt.Dimension;
 
-import javax.swing.JComponent;
-import javax.swing.plaf.basic.BasicButtonUI;
-
-import org.pushingpixels.lafwidget.animation.effects.GhostPaintingUtils;
-
-public class TestContainerGhostingAfterUI extends BasicButtonUI {
-//	public void __container_update(Graphics g, JComponent c) {
-//		super.update(g, c);
-//	}
-
-//	public void update(Graphics g, JComponent c) {
-//		this.__container_update(g, c);
-//		GhostPaintingUtils.paintGhostImages(c, g);
-//	}
+public interface IsResizable {
+	public void setDimension(Dimension newDimension);
 }

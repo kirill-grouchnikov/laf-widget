@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2008 Laf-Widget Kirill Grouchnikov. All Rights Reserved.
+ * Copyright (c) 2005-2016 Laf-Widget Kirill Grouchnikov. All Rights Reserved.
  *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions are met:
@@ -27,22 +27,45 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
  */
-package test.check.asm;
+package org.pushingpixels.lafwidget.utils;
 
-import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 
-import javax.swing.JComponent;
-import javax.swing.plaf.basic.BasicButtonUI;
-
-import org.pushingpixels.lafwidget.animation.effects.GhostPaintingUtils;
-
-public class TestContainerGhostingBeforeUI extends BasicButtonUI {
-	public void __container_update(Graphics g, JComponent c) {
-		super.update(g, c);
+/**
+ * @author Kirill Grouchnikov
+ */
+public class ColorFilter extends AbstractFilter {
+	private int color;
+	
+	public ColorFilter(Color color) {
+		this.color = color.getRGB();
 	}
 
-	public void update(Graphics g, JComponent c) {
-		GhostPaintingUtils.paintGhostImages(c, g);
-		this.__container_update(g, c);
+	@Override
+	public BufferedImage filter(BufferedImage src, BufferedImage dst) {
+		if (dst == null) {
+			dst = createCompatibleDestImage(src, null);
+		}
+
+		int width = src.getWidth();
+		int height = src.getHeight();
+
+		int[] pixels = new int[width * height];
+		getPixels(src, 0, 0, width, height, pixels);
+		
+		int colorAlpha =  (this.color >>> 24) & 0xFF;
+		int colorRed = (this.color >>> 16) & 0xFF;
+		int colorGreen = (this.color >>> 8) & 0xFF;
+		int colorBlue = this.color & 0xFF;
+		for (int i = 0; i < pixels.length; i++) {
+			// Multiply source alpha by the alpha in our target color
+			int alpha = ((pixels[i] >>> 24) & 0xFF) * colorAlpha / 256;
+			// and use R/G/B from our target color
+			pixels[i] = alpha << 24 | colorRed << 16 | colorGreen << 8 | colorBlue;
+		}
+		setPixels(dst, 0, 0, width, height, pixels);
+
+		return dst;
 	}
 }

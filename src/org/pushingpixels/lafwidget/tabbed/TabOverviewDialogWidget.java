@@ -76,23 +76,18 @@ public class TabOverviewDialogWidget extends LafWidgetAdapter<JTabbedPane> {
 	 */
 	@Override
 	public void installDefaults() {
-		TabPreviewPainter previewPainter = LafWidgetUtilities2
-				.getTabPreviewPainter(this.jcomp);
-		if ((previewPainter != null)
-				&& previewPainter.hasOverviewDialog(this.jcomp)) {
+		TabPreviewPainter previewPainter = LafWidgetUtilities2.getTabPreviewPainter(this.jcomp);
+		if ((previewPainter != null) && previewPainter.hasOverviewDialog(this.jcomp)) {
 
-			LafWidgetSupport lafSupport = LafWidgetRepository.getRepository()
-					.getLafSupport();
+			LafWidgetSupport lafSupport = LafWidgetRepository.getRepository().getLafSupport();
 
 			Insets currTabAreaInsets = lafSupport.getTabAreaInsets(this.jcomp);
 			if (currTabAreaInsets == null)
-				currTabAreaInsets = UIManager
-						.getInsets("TabbedPane.tabAreaInsets");
+				currTabAreaInsets = UIManager.getInsets("TabbedPane.tabAreaInsets");
 
 			Insets tabAreaInsets = new Insets(currTabAreaInsets.top,
-					LafWidgetRepository.getRepository().getLafSupport()
-							.getLookupButtonSize()
-							+ 2 + currTabAreaInsets.left,
+					LafWidgetRepository.getRepository().getLafSupport().getLookupButtonSize() + 2
+							+ currTabAreaInsets.left,
 					currTabAreaInsets.bottom, currTabAreaInsets.right);
 			lafSupport.setTabAreaInsets(this.jcomp, tabAreaInsets);
 
@@ -121,63 +116,42 @@ public class TabOverviewDialogWidget extends LafWidgetAdapter<JTabbedPane> {
 	 */
 	@Override
 	public void installListeners() {
-		this.propertyListener = new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-				LafWidgetSupport lafSupport = LafWidgetRepository
-						.getRepository().getLafSupport();
+		this.propertyListener = (PropertyChangeEvent evt) -> {
+			LafWidgetSupport lafSupport = LafWidgetRepository.getRepository().getLafSupport();
 
-				Insets lafInsets = lafSupport
-						.getTabAreaInsets(TabOverviewDialogWidget.this.jcomp);
-				final Insets currTabAreaInsets = (lafInsets == null) ? UIManager
-						.getInsets("TabbedPane.tabAreaInsets")
-						: lafInsets;
+			Insets lafInsets = lafSupport.getTabAreaInsets(TabOverviewDialogWidget.this.jcomp);
+			final Insets currTabAreaInsets = (lafInsets == null) ? UIManager.getInsets("TabbedPane.tabAreaInsets")
+					: lafInsets;
 
-				if (LafWidget.TABBED_PANE_PREVIEW_PAINTER.equals(evt
-						.getPropertyName())) {
-					TabPreviewPainter previewPainter = LafWidgetUtilities2
-							.getTabPreviewPainter(TabOverviewDialogWidget.this.jcomp);
+			if (LafWidget.TABBED_PANE_PREVIEW_PAINTER.equals(evt.getPropertyName())) {
+				TabPreviewPainter previewPainter = LafWidgetUtilities2
+						.getTabPreviewPainter(TabOverviewDialogWidget.this.jcomp);
 
-					if ((previewPainter != null)
-							&& previewPainter
-									.hasOverviewDialog(TabOverviewDialogWidget.this.jcomp)) {
-						Insets tabAreaInsets = new Insets(
-								currTabAreaInsets.top, LafWidgetRepository
-										.getRepository().getLafSupport()
-										.getLookupButtonSize()
-										+ 2 + currTabAreaInsets.left,
-								currTabAreaInsets.bottom,
-								currTabAreaInsets.right);
-						lafSupport.setTabAreaInsets(
-								TabOverviewDialogWidget.this.jcomp,
-								tabAreaInsets);
-						TabOverviewDialogWidget.this.jcomp
-								.add(TabOverviewDialogWidget.this.overviewButton);
-						TabOverviewDialogWidget.this.overviewButton
-								.setVisible(true);
-						// jtp.setComponentZOrder(overviewButton, 0);
-						TabOverviewDialogWidget.this.overviewButton
-								.updateLocation(
-										TabOverviewDialogWidget.this.jcomp,
-										tabAreaInsets);
-					} else {
-						TabOverviewDialogWidget.this.jcomp
-								.remove(TabOverviewDialogWidget.this.overviewButton);
+				if ((previewPainter != null) && previewPainter.hasOverviewDialog(TabOverviewDialogWidget.this.jcomp)) {
+					Insets tabAreaInsets = new Insets(currTabAreaInsets.top,
+							LafWidgetRepository.getRepository().getLafSupport().getLookupButtonSize() + 2
+									+ currTabAreaInsets.left,
+							currTabAreaInsets.bottom, currTabAreaInsets.right);
+					lafSupport.setTabAreaInsets(TabOverviewDialogWidget.this.jcomp, tabAreaInsets);
+					TabOverviewDialogWidget.this.jcomp.add(TabOverviewDialogWidget.this.overviewButton);
+					TabOverviewDialogWidget.this.overviewButton.setVisible(true);
+					// jtp.setComponentZOrder(overviewButton, 0);
+					TabOverviewDialogWidget.this.overviewButton.updateLocation(TabOverviewDialogWidget.this.jcomp,
+							tabAreaInsets);
+				} else {
+					TabOverviewDialogWidget.this.jcomp.remove(TabOverviewDialogWidget.this.overviewButton);
+				}
+			}
+			if ("tabPlacement".equals(evt.getPropertyName()) || "componentOrientation".equals(evt.getPropertyName())
+					|| "tabAreaInsets".equals(evt.getPropertyName())) {
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						if (TabOverviewDialogWidget.this.overviewButton
+								.getParent() == TabOverviewDialogWidget.this.jcomp)
+							TabOverviewDialogWidget.this.overviewButton
+									.updateLocation(TabOverviewDialogWidget.this.jcomp, currTabAreaInsets);
 					}
-				}
-				if ("tabPlacement".equals(evt.getPropertyName())
-						|| "componentOrientation".equals(evt.getPropertyName())
-						|| "tabAreaInsets".equals(evt.getPropertyName())) {
-					SwingUtilities.invokeLater(new Runnable() {
-						public void run() {
-							if (TabOverviewDialogWidget.this.overviewButton
-									.getParent() == TabOverviewDialogWidget.this.jcomp)
-								TabOverviewDialogWidget.this.overviewButton
-										.updateLocation(
-												TabOverviewDialogWidget.this.jcomp,
-												currTabAreaInsets);
-						}
-					});
-				}
+				});
 			}
 		};
 		this.jcomp.addPropertyChangeListener(this.propertyListener);

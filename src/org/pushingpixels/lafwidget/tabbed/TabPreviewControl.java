@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 import org.pushingpixels.lafwidget.animation.AnimationConfigurationManager;
+import org.pushingpixels.lafwidget.contrib.intellij.UIUtil;
 import org.pushingpixels.lafwidget.utils.ShadowPopupBorder;
 import org.pushingpixels.trident.Timeline;
 
@@ -58,8 +59,7 @@ public class TabPreviewControl extends JPanel {
 		this.setLayout(new TabPreviewControlLayout());
 		this.iconLabel = new JLabel(tabPane.getIconAt(tabIndex));
 		this.titleLabel = new JLabel(tabPane.getTitleAt(tabIndex));
-		this.titleLabel
-				.setFont(this.titleLabel.getFont().deriveFont(Font.BOLD));
+		this.titleLabel.setFont(this.titleLabel.getFont().deriveFont(Font.BOLD));
 
 		// the panel with the preview image - perhaps use JLabel
 		// instead?
@@ -77,9 +77,7 @@ public class TabPreviewControl extends JPanel {
 		final boolean isSelected = (tabPane.getSelectedIndex() == tabIndex);
 		Border innerBorder = isSelected ? new LineBorder(Color.black, 2)
 				: new LineBorder(Color.black, 1);
-		this
-				.setBorder(new CompoundBorder(new ShadowPopupBorder(),
-						innerBorder));
+		this.setBorder(new CompoundBorder(new ShadowPopupBorder(), innerBorder));
 
 		this.alpha = 0.0f;
 		this.zoom = 1.0f;
@@ -92,17 +90,18 @@ public class TabPreviewControl extends JPanel {
 	 *            Graphics context.
 	 */
 	public synchronized void paintTabThumbnail(Graphics g) {
-		if (TabPreviewControl.this.previewImage != null) {
-			int pw = TabPreviewControl.this.previewImage.getWidth();
-			int ph = TabPreviewControl.this.previewImage.getHeight();
+		if (this.previewImage != null) {
+			int pw = this.previewImage.getWidth();
+			int ph = this.previewImage.getHeight();
 			int w = this.previewImagePanel.getWidth();
 			int h = this.previewImagePanel.getHeight();
 
+			int scaleFactor = UIUtil.isRetina() ? 2 : 1;
 			Graphics2D g2 = (Graphics2D) g.create();
 			g2.setComposite(AlphaComposite.SrcOver.derive(alpha));
-			int dx = (w - pw) / 2;
-			int dy = (h - ph) / 2;
-			g2.drawImage(TabPreviewControl.this.previewImage, dx, dy, null);
+			int dx = (w - pw / scaleFactor) / 2;
+			int dy = (h - ph / scaleFactor) / 2;
+			g2.drawImage(this.previewImage, dx, dy, pw / scaleFactor, ph / scaleFactor, null);
 			g2.dispose();
 		}
 	}

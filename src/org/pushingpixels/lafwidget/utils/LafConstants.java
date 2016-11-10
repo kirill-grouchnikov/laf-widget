@@ -29,9 +29,6 @@
  */
 package org.pushingpixels.lafwidget.utils;
 
-import org.pushingpixels.lafwidget.animation.*;
-
-
 /**
  * Constants for the <b>laf-widget</b> classes.
  * 

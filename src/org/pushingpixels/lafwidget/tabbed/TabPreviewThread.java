@@ -109,7 +109,7 @@ public class TabPreviewThread extends TrackableThread {
 		}
 
 		public int getPreviewWidth() {
-			return previewWidth;
+			return this.previewWidth;
 		}
 
 		public void setPreviewHeight(int previewHeight) {
@@ -117,7 +117,7 @@ public class TabPreviewThread extends TrackableThread {
 		}
 
 		public int getPreviewHeight() {
-			return previewHeight;
+			return this.previewHeight;
 		}
 	}
 
@@ -225,8 +225,7 @@ public class TabPreviewThread extends TrackableThread {
 						cyclePreviewInfo.initiator = nextPreviewInfo.initiator;
 
 						// schedule it to app-specific delay
-						cyclePreviewInfo.setDelta(previewPainter
-								.getUpdateCycle(cyclePreviewInfo.tabPane));
+						cyclePreviewInfo.setDelta(previewPainter.getUpdateCycle(cyclePreviewInfo.tabPane));
 
 						// queue the new request
 						this.queueTabPreviewRequest(cyclePreviewInfo);
@@ -256,24 +255,23 @@ public class TabPreviewThread extends TrackableThread {
 			final TabPreviewInfo previewInfo, final int tabIndex) {
 		int pWidth = previewInfo.getPreviewWidth();
 		int pHeight = previewInfo.getPreviewHeight();
-		final BufferedImage previewImage = new BufferedImage(pWidth, pHeight,
-				BufferedImage.TYPE_INT_ARGB);
-		Graphics2D gr = previewImage.createGraphics();
+		final BufferedImage previewImage = LafWidgetUtilities2.getBlankImage(pWidth, pHeight);
 		Component comp = tabPane.getComponentAt(tabIndex);
 
 		if (previewPainter.hasPreview(tabPane, tabIndex)) {
 			Map<Component, Boolean> dbSnapshot = new HashMap<Component, Boolean>();
 			LafWidgetUtilities.makePreviewable(comp, dbSnapshot);
-			previewPainter.previewTab(tabPane, tabIndex, gr, 0, 0, pWidth, pHeight);
+			previewPainter.previewTab(tabPane, tabIndex, previewImage, 0, 0, pWidth, pHeight);
 			LafWidgetUtilities.restorePreviewable(comp, dbSnapshot);
 		} else {
+			Graphics2D gr = previewImage.createGraphics();
 			gr.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			gr.setColor(Color.red);
 			gr.setStroke(new BasicStroke(Math.max(5.0f, Math.min(pWidth, pHeight) / 10.0f)));
 			gr.drawLine(0, 0, pWidth, pHeight);
 			gr.drawLine(0, pHeight, pWidth, 0);
+			gr.dispose();
 		}
-		gr.dispose();
 
 		if (previewInfo.previewCallback != null) {
 			SwingUtilities.invokeLater(() ->

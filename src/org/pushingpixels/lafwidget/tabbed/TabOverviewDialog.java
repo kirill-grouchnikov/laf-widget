@@ -29,22 +29,61 @@
  */
 package org.pushingpixels.lafwidget.tabbed;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.HeadlessException;
+import java.awt.KeyboardFocusManager;
+import java.awt.LayoutManager;
+import java.awt.Rectangle;
+import java.awt.Window;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.MessageFormat;
 
-import javax.swing.*;
-import javax.swing.border.*;
+import javax.swing.Icon;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JRootPane;
+import javax.swing.JTabbedPane;
+import javax.swing.ListCellRenderer;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
-import org.pushingpixels.lafwidget.*;
+import org.pushingpixels.lafwidget.LafWidgetRepository;
+import org.pushingpixels.lafwidget.LafWidgetSupport;
+import org.pushingpixels.lafwidget.LafWidgetUtilities;
+import org.pushingpixels.lafwidget.LafWidgetUtilities2;
 import org.pushingpixels.lafwidget.animation.AnimationConfigurationManager;
-import org.pushingpixels.lafwidget.contrib.blogofbug.swing.components.*;
+import org.pushingpixels.lafwidget.contrib.blogofbug.swing.components.JCarosel;
+import org.pushingpixels.lafwidget.contrib.blogofbug.swing.components.JCarouselMenu;
+import org.pushingpixels.lafwidget.contrib.blogofbug.swing.components.ReflectedImageLabel;
 import org.pushingpixels.lafwidget.tabbed.TabPreviewThread.TabPreviewInfo;
-import org.pushingpixels.lafwidget.utils.ShadowPopupBorder;
 import org.pushingpixels.lafwidget.utils.LafConstants.TabOverviewKind;
+import org.pushingpixels.lafwidget.utils.ShadowPopupBorder;
 import org.pushingpixels.trident.Timeline;
 import org.pushingpixels.trident.Timeline.TimelineState;
 import org.pushingpixels.trident.callback.UIThreadTimelineCallbackAdapter;
@@ -60,11 +99,6 @@ public class TabOverviewDialog extends JDialog {
 	 * The associated tabbed pane.
 	 */
 	protected JTabbedPane tabPane;
-
-	// /**
-	// * The grid overview panel (with all thumbnails).
-	// */
-	// protected JPanel gridOverviewPanel;
 
 	/**
 	 * The associated preview callback.
@@ -569,55 +603,25 @@ public class TabOverviewDialog extends JDialog {
 					if (tabIcon != null) {
 						tabIcon.paintIcon(tabPane, g2d, 2, 2);
 					}
-					// Component caroselComponent = carosel.add(result, tabPane
-					// .getTitleAt(tabIndex));
-					// caroselComponent.setForeground(UIManager
-					// .getColor("Label.foreground"));
 
-					// System.err.println("Setting image on " + tabIndex);
 					previewControls[tabIndex].setRichImage(result);
-					// System.err.println("Set image on " + tabIndex);
 					previewControls[tabIndex].repaint();
-					// previewControls.add(caroselComponent);
-					// TabRoundCarouselOverviewPanel.this.previewControls[tabIndex]
-					// .setPreviewImage(componentSnap);
 				}
 			};
 
 			this.caroselMenu = new JCarouselMenu(null);
 			JList dummyList = new JList();
 			ListCellRenderer lcr = dummyList.getCellRenderer();
-			this.caroselMenu.setCellRenderer(new MenuCarouselListCellRenderer(
-					lcr));
-			this.caroselMenu.setMenuScrollColor(UIManager
-					.getColor("Panel.background"));
-			this.caroselMenu.setUpDownColor(UIManager
-					.getColor("Label.foreground"));
-			LafWidgetSupport support = LafWidgetRepository.getRepository()
-					.getLafSupport();
+			this.caroselMenu.setCellRenderer(new MenuCarouselListCellRenderer(lcr));
+			this.caroselMenu.setMenuScrollColor(UIManager.getColor("Panel.background"));
+			this.caroselMenu.setUpDownColor(UIManager.getColor("Label.foreground"));
+			LafWidgetSupport support = LafWidgetRepository.getRepository().getLafSupport();
 			if (support != null) {
-				this.caroselMenu.setUpDownIcons(support
-						.getArrowIcon(SwingConstants.NORTH), support
-						.getArrowIcon(SwingConstants.SOUTH));
+				this.caroselMenu.setUpDownIcons(
+						support.getArrowIcon(SwingConstants.NORTH), 
+						support.getArrowIcon(SwingConstants.SOUTH));
 			}
 
-			// this.carosel.setDepthBasedAlpha(true);
-			// // carosel.setBackground(Color.BLACK, Color.DARK_GRAY);
-			// carosel
-			// .add(
-			// TabOverviewDialog.class
-			// .getResource(
-			// "/contrib/com/blogofbug/examples/images/Acknowledgements.png")
-			// .toString(), "You Rock", 128, 128);
-			// carosel.add(TabOverviewDialog.class.getResource(
-			// "/contrib/com/blogofbug/examples/images/Dock.png")
-			// .toString(), "Docks Rock", 128, 128);
-			// carosel.add(TabOverviewDialog.class.getResource(
-			// "/contrib/com/blogofbug/examples/images/Cascade.png")
-			// .toString(), "Cascade Icon", 128, 128);
-			// carosel.add(TabOverviewDialog.class.getResource(
-			// "/contrib/com/blogofbug/examples/images/Quit.png")
-			// .toString(), "Quit Bugging", 128, 128);
 			this.setLayout(new BorderLayout());
 			this.add(caroselMenu, BorderLayout.CENTER);
 
@@ -1037,7 +1041,7 @@ public class TabOverviewDialog extends JDialog {
 			bdx = 1;
 			bdy = iy + 3;
 			bGraphics.translate(bdx, bdy);
-			(child).paintTabThumbnail(bGraphics);
+			child.paintTabThumbnail(bGraphics);
 			bGraphics.translate(-bdx, -bdy);
 			bGraphics.setColor(Color.black);
 			bGraphics.drawRect(0, 0, child.getWidth() - 1,

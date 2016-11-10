@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2008 Laf-Widget Kirill Grouchnikov. All Rights Reserved.
+ * Copyright (c) 2005-2016 Laf-Widget Kirill Grouchnikov. All Rights Reserved.
  *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions are met:
@@ -27,28 +27,19 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
  */
-package test.check.asm;
+package org.pushingpixels.lafwidget.icon;
 
-import java.awt.*;
+import java.awt.image.BufferedImage;
 
-import javax.swing.AbstractButton;
-import javax.swing.JComponent;
-import javax.swing.plaf.basic.BasicButtonUI;
+import javax.swing.Icon;
+import javax.swing.plaf.UIResource;
 
-import org.pushingpixels.lafwidget.animation.effects.GhostPaintingUtils;
-
-public class TestIconGhostingUI2 extends BasicButtonUI {
-//	private boolean iconGhostingMarker;
-//
-//	protected void __test__check__asm__TestIconGhostingUI__paintIcon(Graphics g,
-//			AbstractButton c, Rectangle iconRect) {
-//		super.paintIcon(g, c, iconRect);
-//	}
-//
-	protected void paintIcon(Graphics g, AbstractButton c, Rectangle iconRect) {
-//		Graphics2D graphics = (Graphics2D) g.create();
-//		GhostPaintingUtils.paintGhostIcon(graphics, (AbstractButton) c);
-//		graphics.dispose();
-//		__test__check__asm__TestIconGhostingUI__paintIcon(g, c, iconRect);
+public class HiDpiAwareIconUiResource extends HiDpiAwareIcon implements UIResource {
+	public HiDpiAwareIconUiResource(BufferedImage image) {
+		super(image);
+	}
+	
+	public HiDpiAwareIconUiResource(Icon icon) {
+		super(icon);
 	}
 }

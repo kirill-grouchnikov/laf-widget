@@ -106,44 +106,31 @@ public class ScrollPaneSelectorWidget extends LafWidgetAdapter<JScrollPane> {
 
 	@Override
 	public void installListeners() {
-		this.hierarchyListener = new HierarchyListener() {
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see
-			 * java.awt.event.HierarchyListener#hierarchyChanged(java.awt.event
-			 * .HierarchyEvent)
-			 */
-			public void hierarchyChanged(HierarchyEvent e) {
-				if (jcomp.getParent() instanceof ComboPopup) {
-					if (scrollPaneSelector != null) {
-						scrollPaneSelector.uninstallFromScrollPane();
-						scrollPaneSelector = null;
-					}
+		this.hierarchyListener = (HierarchyEvent e) -> {
+			if (jcomp.getParent() instanceof ComboPopup) {
+				if (scrollPaneSelector != null) {
+					scrollPaneSelector.uninstallFromScrollPane();
+					scrollPaneSelector = null;
 				}
 			}
 		};
 		this.jcomp.addHierarchyListener(this.hierarchyListener);
 
-		this.propertyChangeListener = new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-				if (LafWidget.COMPONENT_PREVIEW_PAINTER.equals(evt
-						.getPropertyName())) {
-					PreviewPainter pPainter = LafWidgetUtilities2
-							.getComponentPreviewPainter(jcomp);
-					// Uninstall old scroll pane selector
-					if (scrollPaneSelector != null) {
-						scrollPaneSelector.uninstallFromScrollPane();
-						scrollPaneSelector = null;
-					}
-					// Install new scroll pane selector
-					if (pPainter != null
-							&& LafWidgetRepository.getRepository()
-									.getLafSupport().toInstallExtraElements(
-											jcomp)) {
-						scrollPaneSelector = new ScrollPaneSelector();
-						scrollPaneSelector.installOnScrollPane(jcomp);
-					}
+		this.propertyChangeListener = (PropertyChangeEvent evt) -> {
+			if (LafWidget.COMPONENT_PREVIEW_PAINTER.equals(evt.getPropertyName())) {
+				PreviewPainter pPainter = LafWidgetUtilities2
+						.getComponentPreviewPainter(jcomp);
+				// Uninstall old scroll pane selector
+				if (scrollPaneSelector != null) {
+					scrollPaneSelector.uninstallFromScrollPane();
+					scrollPaneSelector = null;
+				}
+				// Install new scroll pane selector
+				if (pPainter != null
+						&& LafWidgetRepository.getRepository().getLafSupport().
+							toInstallExtraElements(jcomp)) {
+					scrollPaneSelector = new ScrollPaneSelector();
+					scrollPaneSelector.installOnScrollPane(jcomp);
 				}
 			}
 		};

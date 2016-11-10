@@ -27,34 +27,8 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
  */
-package org.pushingpixels.lafwidget.ant;
+package org.pushingpixels.lafwidget.icon;
 
-/**
- * Exception thrown when augmentation failed.
- * 
- * @author Kirill Grouchnikov
- */
-public class AugmentException extends RuntimeException {
-
-	/**
-	 * Creates a new exception.
-	 * 
-	 * @param message
-	 *            Message.
-	 * @param cause
-	 *            Cause.
-	 */
-	public AugmentException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	/**
-	 * Creates a new exception.
-	 * 
-	 * @param message
-	 *            Message.
-	 */
-	public AugmentException(String message) {
-		super(message);
-	}
+public interface IsHiDpiAware {
+	public boolean isHiDpiAware();
 }
