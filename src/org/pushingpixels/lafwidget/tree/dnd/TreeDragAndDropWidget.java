@@ -104,41 +104,36 @@ public class TreeDragAndDropWidget extends LafWidgetAdapter<JTree> {
 	public void installListeners() {
 		this.listeners = new EventListenerList();
 
-		this.propertyChangeListener = new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-				if (LafWidget.TREE_AUTO_DND_SUPPORT.equals(evt
-						.getPropertyName())) {
-					Object oldValue = evt.getOldValue();
-					Object newValue = evt.getNewValue();
-					boolean hadDnd = false;
-					if (oldValue instanceof Boolean)
-						hadDnd = ((Boolean) oldValue).booleanValue();
-					boolean hasDnd = false;
-					if (newValue instanceof Boolean)
-						hasDnd = ((Boolean) newValue).booleanValue();
+		this.propertyChangeListener = (PropertyChangeEvent evt) -> {
+			if (LafWidget.TREE_AUTO_DND_SUPPORT.equals(evt.getPropertyName())) {
+				Object oldValue = evt.getOldValue();
+				Object newValue = evt.getNewValue();
+				boolean hadDnd = false;
+				if (oldValue instanceof Boolean)
+					hadDnd = ((Boolean) oldValue).booleanValue();
+				boolean hasDnd = false;
+				if (newValue instanceof Boolean)
+					hasDnd = ((Boolean) newValue).booleanValue();
 
-					if (!hadDnd && hasDnd
-							&& TreeDragAndDropWidget.this.jcomp.isEnabled()) {
+				if (!hadDnd && hasDnd
+						&& TreeDragAndDropWidget.this.jcomp.isEnabled()) {
+					TreeDragAndDropWidget.this.installDnDSupport();
+				}
+				if (hadDnd && !hasDnd) {
+					TreeDragAndDropWidget.this.uninstallDnDSupport();
+				}
+			}
+
+			if ("enabled".equals(evt.getPropertyName())) {
+				boolean wasEnabled = ((Boolean) evt.getOldValue()).booleanValue();
+				boolean isEnabled = ((Boolean) evt.getNewValue()).booleanValue();
+				if (!wasEnabled && isEnabled) {
+					if (LafWidgetUtilities
+							.hasAutomaticDnDSupport(TreeDragAndDropWidget.this.jcomp))
 						TreeDragAndDropWidget.this.installDnDSupport();
-					}
-					if (hadDnd && !hasDnd) {
-						TreeDragAndDropWidget.this.uninstallDnDSupport();
-					}
 				}
-
-				if ("enabled".equals(evt.getPropertyName())) {
-					boolean wasEnabled = ((Boolean) evt.getOldValue())
-							.booleanValue();
-					boolean isEnabled = ((Boolean) evt.getNewValue())
-							.booleanValue();
-					if (!wasEnabled && isEnabled) {
-						if (LafWidgetUtilities
-								.hasAutomaticDnDSupport(TreeDragAndDropWidget.this.jcomp))
-							TreeDragAndDropWidget.this.installDnDSupport();
-					}
-					if (wasEnabled && !isEnabled)
-						TreeDragAndDropWidget.this.uninstallDnDSupport();
-				}
+				if (wasEnabled && !isEnabled)
+					TreeDragAndDropWidget.this.uninstallDnDSupport();
 			}
 		};
 		this.jcomp.addPropertyChangeListener(this.propertyChangeListener);
@@ -154,22 +149,20 @@ public class TreeDragAndDropWidget extends LafWidgetAdapter<JTree> {
 			return;
 		}
 
-		this.cellRendererChangeListener = new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-				String name = evt.getPropertyName();
+		this.cellRendererChangeListener = (PropertyChangeEvent evt) -> {
+			String name = evt.getPropertyName();
 
-				if (name.equals(JTree.CELL_RENDERER_PROPERTY)) {
-					TreeCellRenderer renderer = TreeDragAndDropWidget.this.jcomp
-							.getCellRenderer();
-					if (!(renderer instanceof DnDCellRendererProxy)) {
-						TreeDragAndDropWidget.this.rendererProxy = new DnDCellRendererProxy(
-								renderer);
-						TreeDragAndDropWidget.this.jcomp
-								.setCellRenderer(TreeDragAndDropWidget.this.rendererProxy);
-						TreeDragAndDropWidget.this.jcomp.repaint();
-					} else
-						TreeDragAndDropWidget.this.rendererProxy = (DnDCellRendererProxy) renderer;
-				}
+			if (name.equals(JTree.CELL_RENDERER_PROPERTY)) {
+				TreeCellRenderer renderer = TreeDragAndDropWidget.this.jcomp
+						.getCellRenderer();
+				if (!(renderer instanceof DnDCellRendererProxy)) {
+					TreeDragAndDropWidget.this.rendererProxy = new DnDCellRendererProxy(
+							renderer);
+					TreeDragAndDropWidget.this.jcomp
+							.setCellRenderer(TreeDragAndDropWidget.this.rendererProxy);
+					TreeDragAndDropWidget.this.jcomp.repaint();
+				} else
+					TreeDragAndDropWidget.this.rendererProxy = (DnDCellRendererProxy) renderer;
 			}
 		};
 
@@ -277,8 +270,7 @@ public class TreeDragAndDropWidget extends LafWidgetAdapter<JTree> {
 			image = new BufferedImage(dragBounds.width, dragBounds.height,
 					BufferedImage.TYPE_INT_ARGB);
 			Graphics2D g2d = image.createGraphics();
-			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC,
-					0.75f));
+			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC, 0.75f));
 			component.paint(g2d);
 			g2d.dispose();
 
@@ -299,9 +291,6 @@ public class TreeDragAndDropWidget extends LafWidgetAdapter<JTree> {
 	 */
 	class TreeDragSourceListener implements DragSourceListener {
 		public void dragExit(DragSourceEvent dse) {
-			// dropNode = null;
-			// rendererProxy.setDropNode( null );
-			// tree.repaint();
 		}
 
 		public void dropActionChanged(DragSourceDragEvent dsde) {

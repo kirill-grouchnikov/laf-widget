@@ -29,12 +29,20 @@
  */
 package org.pushingpixels.lafwidget.tree.dnd;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.net.URL;
 
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.border.Border;
+
+import org.pushingpixels.lafwidget.tree.dnd.svg.drop_not_allowed;
+import org.pushingpixels.lafwidget.tree.dnd.svg.drop_on_leaf;
 
 /**
  * DnDBorderFactory is responsible for creating node borders used under
@@ -51,23 +59,22 @@ class DnDBorderFactory {
 	 */
 	static class DropAllowedBorder implements Border {
 		private static Insets insets = new Insets(0, 0, 3, 0);
-		private ImageIcon plusIcon;
+		private Icon plusIcon;
 
 		/**
 		 * Creates a new instance of DropAllowedBorder
 		 */
 		public DropAllowedBorder() {
-			URL iconURL = DropAllowedBorder.class
-					.getResource("icons/drop-on-leaf.png");
-			if (iconURL != null)
-				this.plusIcon = new ImageIcon(iconURL);
+			this.plusIcon = drop_on_leaf.of(16, 16);
 		}
 
 		public void paintBorder(Component c, Graphics g, int x, int y,
 				int width, int height) {
 			int yh = y + height - 1;
 			if (this.plusIcon != null) {
-				this.plusIcon.paintIcon(c, g, x + 8, yh - 8);
+				Graphics2D g2d = (Graphics2D) g.create();
+				g2d.translate(x + 8, yh - 8);
+				this.plusIcon.paintIcon(c, g2d, 0, 0);
 			}
 			yh -= 4;
 			g.setColor(Color.DARK_GRAY);
@@ -115,25 +122,23 @@ class DnDBorderFactory {
 	 */
 	class DropNotAllowedBorder implements Border {
 		private Insets insets = new Insets(0, 0, 0, 0);
-		private ImageIcon plusIcon;
+		private Icon plusIcon;
 
 		/**
 		 * Creates a new instance of DropOnNodeBorder
 		 */
 		public DropNotAllowedBorder() {
-			URL iconURL = DnDBorderFactory.class
-					.getResource("icons/drop-not-allowed.png");
-			if (iconURL != null)
-				this.plusIcon = new ImageIcon(iconURL);
+			this.plusIcon = drop_not_allowed.of(16, 16);
 		}
 
 		public void paintBorder(Component c, Graphics g, int x, int y,
 				int width, int height) {
 			if (this.plusIcon != null) {
-				this.plusIcon.paintIcon(c, g, x, y);
+				Graphics2D g2d = (Graphics2D) g.create();
+				g2d.translate(x, y);
+				this.plusIcon.paintIcon(c, g2d, 0, 0);
+				g2d.dispose();
 			}
-			// g.setColor( Color.RED );
-			// g.drawRect( x, y, width-1, height-1 );
 		}
 
 		public Insets getBorderInsets(Component c) {
@@ -150,8 +155,7 @@ class DnDBorderFactory {
 	 * Creates a new instance of DnDBorderFactory
 	 */
 	public DnDBorderFactory() {
-		this.setDropAllowedBorder(new DropAllowedBorder()); // DropOnFolderBorder()
-		// );
+		this.setDropAllowedBorder(new DropAllowedBorder()); 
 		this.setDropNotAllowedBorder(new DropNotAllowedBorder());
 		this.setOffsetBorder(new OffsetBorder());
 		this.setEmptyBorder(BorderFactory.createEmptyBorder());

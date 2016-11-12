@@ -16,7 +16,7 @@
 package org.pushingpixels.lafwidget.contrib.blogofbug.swing;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 import javax.swing.Timer;
 
 /**
@@ -39,12 +39,7 @@ public class SwingBugUtilities {
      * @param after The delay in ms before the event will be called
      */
     public static void invokeAfter(final Runnable execute, int after){
-        Timer timer = new Timer(after,new ActionListener() {
-            public void actionPerformed(ActionEvent actionEvent) {
-                execute.run();
-            }
-        });
-        
+        Timer timer = new Timer(after, (ActionEvent actionEvent) -> execute.run());
         timer.setRepeats(false);
         timer.start();
     }
