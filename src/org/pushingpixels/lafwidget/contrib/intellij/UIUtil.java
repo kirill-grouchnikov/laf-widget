@@ -145,6 +145,7 @@ public class UIUtil {
 	private static Boolean cachedRetinaReply = null;
 
 	public static boolean isRetina() {
+		//if (true) return false;
 		if (cachedRetinaReply != null) {
 			return cachedRetinaReply;
 		}
