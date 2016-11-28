@@ -152,9 +152,7 @@ public class LafWidgetRepository {
 	 */
 	protected void populateFrom(URL url) {
 		Properties props = new Properties();
-		InputStream is = null;
-		try {
-			is = url.openStream();
+		try (InputStream is = url.openStream()) {
 			props.load(is);
 
 			Enumeration<?> names = props.propertyNames();
@@ -176,13 +174,6 @@ public class LafWidgetRepository {
 			}
 
 		} catch (IOException ioe) {
-		} finally {
-			if (is != null) {
-				try {
-					is.close();
-				} catch (IOException ioe) {
-				}
-			}
 		}
 	}
 
