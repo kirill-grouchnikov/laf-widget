@@ -29,9 +29,17 @@
  */
 package org.pushingpixels.lafwidget.utils;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GraphicsDevice;
+import java.awt.PrintGraphics;
+import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.print.PrinterGraphics;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.CellRendererPane;
 import javax.swing.SwingUtilities;

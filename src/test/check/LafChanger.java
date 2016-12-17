@@ -32,7 +32,10 @@ package test.check;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JMenuItem;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 public class LafChanger implements ActionListener {
 	private JFrame frame;

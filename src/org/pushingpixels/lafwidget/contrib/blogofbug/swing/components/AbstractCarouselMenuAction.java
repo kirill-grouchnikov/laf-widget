@@ -16,6 +16,7 @@
 package org.pushingpixels.lafwidget.contrib.blogofbug.swing.components;
 
 import java.net.URL;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 

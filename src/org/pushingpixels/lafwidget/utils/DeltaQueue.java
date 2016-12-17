@@ -29,7 +29,9 @@
  */
 package org.pushingpixels.lafwidget.utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Delta queue. Follows a standard approach from OS world for effeciently

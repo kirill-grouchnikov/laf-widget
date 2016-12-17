@@ -30,7 +30,8 @@
 
 package org.pushingpixels.lafwidget.utils;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Toolkit;
 import java.util.Locale;
 
 /**
@@ -192,8 +193,6 @@ public final class LookUtils {
 	 * @see Toolkit#getScreenResolution()
 	 */
 	public static final boolean IS_LOW_RESOLUTION = isLowResolution();
-
-	private static boolean loggingEnabled = true;
 
 	private LookUtils() {
 		// Override default constructor; prevents instantiation.

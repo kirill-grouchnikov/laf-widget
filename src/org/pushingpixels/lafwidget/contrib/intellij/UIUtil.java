@@ -15,14 +15,12 @@
  */
 package org.pushingpixels.lafwidget.contrib.intellij;
 
-import java.awt.AWTError;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.rmi.registry.Registry;
 import java.util.WeakHashMap;
 
 import org.pushingpixels.lafwidget.utils.LookUtils;

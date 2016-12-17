@@ -15,16 +15,24 @@
 
 package org.pushingpixels.lafwidget.contrib.blogofbug.swing.components;
 
-import java.awt.*;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Composite;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 
 import org.pushingpixels.lafwidget.contrib.blogofbug.utility.ImageUtilities;
@@ -137,24 +145,6 @@ public class ReflectedImageLabel extends JLabel implements RichComponent{
      */
     public void setLabel(String text){
         this.text = text;
-    }
-    
-
-    
-    /**
-     * Will accept a string URL for loading the image before calling the normal setupImage function after loading it.
-     * @param imageURL The URL of the image (in a string)
-     */
-    private void setupImage(String imageURL) {
-        Image image = null;
-        try {
-            image = ImageIO.read(new URL(imageURL));
-        } catch (MalformedURLException ex) {
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        this.setupImage(image);
     }
     
     /**
@@ -313,7 +303,7 @@ public class ReflectedImageLabel extends JLabel implements RichComponent{
      */
     public void setRichImage(File image) {
         try {
-            setRichImage(image.toURL());
+            setRichImage(image.toURI().toURL());
         } catch (MalformedURLException ex) {
             ex.printStackTrace();
         }

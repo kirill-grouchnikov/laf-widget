@@ -85,7 +85,6 @@ import org.pushingpixels.trident.callback.UIThreadTimelineCallbackAdapter;
  */
 public class ScrollPaneSelector extends JComponent {
 	// static final fields
-	private static final double MAX_SIZE = 200;
 	private static final String COMPONENT_ORIENTATION = "componentOrientation";
 
 	// member fields

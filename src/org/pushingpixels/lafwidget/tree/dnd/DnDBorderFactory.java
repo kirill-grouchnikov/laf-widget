@@ -34,11 +34,9 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
-import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.border.Border;
 
 import org.pushingpixels.lafwidget.tree.dnd.svg.drop_not_allowed;

@@ -333,7 +333,6 @@ public class CaroselLayout implements LayoutManager,ActionListener{
         //No longer calculate the width based on prefered sizes, we're going to control 
         //it by the component not the content'
         int widestWidth = neutralContentWidth;
-        int highestHeight = 0;
                 
         width -= widestWidth;
         

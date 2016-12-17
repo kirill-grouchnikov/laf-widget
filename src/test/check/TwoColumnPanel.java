@@ -29,11 +29,19 @@
  */
 package test.check;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Insets;
+import java.awt.LayoutManager;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.border.TitledBorder;
 
 public class TwoColumnPanel extends JPanel {
@@ -79,32 +87,16 @@ public class TwoColumnPanel extends JPanel {
 
 		private int minimumRightWidth;
 
-		public int getHorizontalSpacing() {
-			return this.horizontalSpacing;
-		}
-
 		public void setHorizontalSpacing(int horizontalSpacing) {
 			this.horizontalSpacing = horizontalSpacing;
-		}
-
-		public int getMinimumLeftWidth() {
-			return this.minimumLeftWidth;
 		}
 
 		public void setMinimumLeftWidth(int minimumLeftWidth) {
 			this.minimumLeftWidth = minimumLeftWidth;
 		}
 
-		public int getMinimumRightWidth() {
-			return this.minimumRightWidth;
-		}
-
 		public void setMinimumRightWidth(int minimumRightWidth) {
 			this.minimumRightWidth = minimumRightWidth;
-		}
-
-		public int getVerticalSpacing() {
-			return this.verticalSpacing;
 		}
 
 		public void setVerticalSpacing(int verticalSpacing) {

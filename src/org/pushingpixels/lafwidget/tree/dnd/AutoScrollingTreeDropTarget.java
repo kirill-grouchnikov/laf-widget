@@ -30,9 +30,13 @@
 package org.pushingpixels.lafwidget.tree.dnd;
 
 import java.awt.Point;
-import java.awt.dnd.*;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetListener;
 
-import javax.swing.*;
+import javax.swing.JTree;
+import javax.swing.JViewport;
+import javax.swing.SwingUtilities;
 
 class AutoScrollingTreeDropTarget extends DropTarget {
 	private JViewport viewport;

@@ -30,7 +30,6 @@
 package org.pushingpixels.lafwidget.tree.dnd;
 
 import java.awt.Component;
-import java.awt.Image;
 
 import javax.swing.JComponent;
 import javax.swing.JTree;
@@ -50,7 +49,6 @@ class DnDCellRendererProxy extends Component implements TreeCellRenderer {
 	private TreeNode draggedNode;
 	private TreeNode dropNode;
 	private int dropNodeRow;
-	private Image shadowImage;
 	private boolean fetchBorder;
 	private Border originalBorder;
 
@@ -179,9 +177,5 @@ class DnDCellRendererProxy extends Component implements TreeCellRenderer {
 		this.dropAllowed = dropAllowed;
 		if (!dropAllowed)
 			this.dropNodeRow = -2;
-	}
-
-	public void setShadowImage(Image anImage) {
-		this.shadowImage = anImage;
 	}
 }

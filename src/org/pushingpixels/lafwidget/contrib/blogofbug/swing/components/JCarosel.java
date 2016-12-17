@@ -15,8 +15,13 @@
 
 package org.pushingpixels.lafwidget.contrib.blogofbug.swing.components;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Image;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 import org.pushingpixels.lafwidget.contrib.blogofbug.swing.SwingBugUtilities;
 import org.pushingpixels.lafwidget.contrib.blogofbug.swing.layout.CaroselLayout;
@@ -35,11 +40,6 @@ import org.pushingpixels.lafwidget.contrib.blogofbug.utility.ImageUtilities;
  */
 public class JCarosel extends GradientPanel implements MouseListener,
 		MouseWheelListener {
-	/**
-	 * Set to true if the performance should be measured. Debugging purposes
-	 * only
-	 */
-	private static final boolean MEASURE_PERFORMANCE = true;
 	/**
 	 * The property that is set when a new component comes to the front. To use
 	 * it add a property change listener for it, useful for keeping animations
