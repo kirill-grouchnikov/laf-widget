@@ -70,8 +70,7 @@ public class LockBorder implements Border, UIResource, BorderWrapper {
 	 * @see javax.swing.border.Border#getBorderInsets(java.awt.Component)
 	 */
 	public Insets getBorderInsets(Component c) {
-		LafWidgetSupport lafSupport = LafWidgetRepository.getRepository()
-				.getLafSupport();
+		LafWidgetSupport lafSupport = LafWidgetRepository.getRepository().getLafSupport();
 		Icon lockIcon = lafSupport.getLockIcon(c);
 		if (lockIcon == null)
 			lockIcon = LafWidgetUtilities.getSmallLockIcon();
@@ -79,14 +78,13 @@ public class LockBorder implements Border, UIResource, BorderWrapper {
 		Insets origInsets = this.originalBorder.getBorderInsets(c);
 
 		if (c.getComponentOrientation().isLeftToRight()) {
-			return new Insets(origInsets.top, Math.max(origInsets.left,
-					lockIcon.getIconWidth() + 2), origInsets.bottom,
-					origInsets.right);
+			return new Insets(origInsets.top, origInsets.left, origInsets.bottom,
+					Math.max(origInsets.right, lockIcon.getIconWidth() + 2));
 		} else {
 			// support for RTL
-			return new Insets(origInsets.top, origInsets.left,
-					origInsets.bottom, Math.max(origInsets.right, lockIcon
-							.getIconWidth() + 2));
+			return new Insets(origInsets.top,
+					Math.max(origInsets.left, lockIcon.getIconWidth() + 2), origInsets.bottom,
+					origInsets.right);
 		}
 	}
 
@@ -110,11 +108,9 @@ public class LockBorder implements Border, UIResource, BorderWrapper {
 	 * @see javax.swing.border.Border#paintBorder(java.awt.Component,
 	 * java.awt.Graphics, int, int, int, int)
 	 */
-	public void paintBorder(Component c, Graphics g, int x, int y, int width,
-			int height) {
+	public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
 		this.originalBorder.paintBorder(c, g, x, y, width, height);
-		LafWidgetSupport lafSupport = LafWidgetRepository.getRepository()
-				.getLafSupport();
+		LafWidgetSupport lafSupport = LafWidgetRepository.getRepository().getLafSupport();
 		Icon lockIcon = lafSupport.getLockIcon(c);
 		if (lockIcon == null)
 			lockIcon = LafWidgetUtilities.getSmallLockIcon();
@@ -135,13 +131,12 @@ public class LockBorder implements Border, UIResource, BorderWrapper {
 			offsetY = c.getHeight() - viewRect.y - viewRect.height;
 		}
 
+		int iconY = y + height - lockIcon.getIconHeight() - offsetY;
 		if (c.getComponentOrientation().isLeftToRight()) {
-			lockIcon.paintIcon(c, g, x, y + height - lockIcon.getIconHeight()
-					- offsetY);
+			lockIcon.paintIcon(c, g, x + width - lockIcon.getIconWidth(), iconY);
 		} else {
 			// support for RTL
-			lockIcon.paintIcon(c, g, x + width - lockIcon.getIconWidth(), y
-					+ height - lockIcon.getIconHeight() - offsetY);
+			lockIcon.paintIcon(c, g, x, iconY);
 		}
 	}
 }
