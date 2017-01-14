@@ -42,53 +42,49 @@ import org.pushingpixels.lafwidget.LafWidgetUtilities;
  * 
  * @author Kirill Grouchnikov
  */
-public class SelectAllOnFocusGainWidget extends
-		LafWidgetAdapter<JTextComponent> {
-	/**
-	 * The focus listener.
-	 */
-	protected FocusListener focusListener;
+public class SelectAllOnFocusGainWidget extends LafWidgetAdapter<JTextComponent> {
+    /**
+     * The focus listener.
+     */
+    protected FocusListener focusListener;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.pushingpixels.lafwidget.LafWidget#requiresCustomLafSupport()
-	 */
-	public boolean requiresCustomLafSupport() {
-		return false;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.pushingpixels.lafwidget.LafWidget#requiresCustomLafSupport()
+     */
+    public boolean requiresCustomLafSupport() {
+        return false;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.pushingpixels.lafwidget.LafWidgetAdapter#installListeners()
-	 */
-	@Override
-	public void installListeners() {
-		this.focusListener = new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						if (LafWidgetUtilities
-								.hasTextFocusSelectAllProperty(jcomp)
-								&& jcomp.isEditable())
-							jcomp.selectAll();
-					}
-				});
-			}
-		};
-		this.jcomp.addFocusListener(this.focusListener);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.pushingpixels.lafwidget.LafWidgetAdapter#installListeners()
+     */
+    @Override
+    public void installListeners() {
+        this.focusListener = new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                SwingUtilities.invokeLater(() -> {
+                    if (LafWidgetUtilities.hasTextFocusSelectAllProperty(jcomp)
+                            && jcomp.isEditable())
+                        jcomp.selectAll();
+                });
+            }
+        };
+        this.jcomp.addFocusListener(this.focusListener);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.pushingpixels.lafwidget.LafWidgetAdapter#uninstallListeners()
-	 */
-	@Override
-	public void uninstallListeners() {
-		this.jcomp.removeFocusListener(this.focusListener);
-		this.focusListener = null;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.pushingpixels.lafwidget.LafWidgetAdapter#uninstallListeners()
+     */
+    @Override
+    public void uninstallListeners() {
+        this.jcomp.removeFocusListener(this.focusListener);
+        this.focusListener = null;
+    }
 }

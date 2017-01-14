@@ -526,13 +526,11 @@ public class JCarouselMenu extends GradientPanel implements ListSelectionListene
             }
             
             final int indexToSelect = lastSelection;
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    menu.setSelectedIndex(indexToSelect);
-                    menu.ensureIndexIsVisible(indexToSelect);
-                    menu.repaint();
-                }
-            });                        
+            SwingUtilities.invokeLater(() -> {
+                menu.setSelectedIndex(indexToSelect);
+                menu.ensureIndexIsVisible(indexToSelect);
+                menu.repaint();
+            });
         }        
     }
     

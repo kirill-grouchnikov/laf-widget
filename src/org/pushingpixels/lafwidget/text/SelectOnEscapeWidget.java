@@ -46,115 +46,104 @@ import org.pushingpixels.lafwidget.*;
  * @since 2.1
  */
 public class SelectOnEscapeWidget extends LafWidgetAdapter<JTextComponent> {
-	protected PropertyChangeListener propertyChangeListener;
+    protected PropertyChangeListener propertyChangeListener;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.pushingpixels.lafwidget.LafWidget#requiresCustomLafSupport()
-	 */
-	public boolean requiresCustomLafSupport() {
-		return false;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.pushingpixels.lafwidget.LafWidget#requiresCustomLafSupport()
+     */
+    public boolean requiresCustomLafSupport() {
+        return false;
+    }
 
-	private void installTracking() {
-		InputMap currMap = SwingUtilities.getUIInputMap(this.jcomp,
-				JComponent.WHEN_FOCUSED);
+    private void installTracking() {
+        InputMap currMap = SwingUtilities.getUIInputMap(this.jcomp, JComponent.WHEN_FOCUSED);
 
-		InputMap newMap = new InputMap();
-		if (currMap != null) {
-			KeyStroke[] kss = currMap.allKeys();
-			for (int i = 0; i < kss.length; i++) {
-				KeyStroke stroke = kss[i];
-				Object val = currMap.get(stroke);
-				newMap.put(stroke, val);
-			}
-		}
+        InputMap newMap = new InputMap();
+        if (currMap != null) {
+            KeyStroke[] kss = currMap.allKeys();
+            for (int i = 0; i < kss.length; i++) {
+                KeyStroke stroke = kss[i];
+                Object val = currMap.get(stroke);
+                newMap.put(stroke, val);
+            }
+        }
 
-		newMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-				"flipTextSelection");
+        newMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "flipTextSelection");
 
-		this.jcomp.getActionMap().put("flipTextSelection",
-				new AbstractAction() {
-					public void actionPerformed(ActionEvent e) {
-						SwingUtilities.invokeLater(new Runnable() {
-							public void run() {
-								int selectionLength = jcomp.getSelectionEnd()
-										- jcomp.getSelectionStart();
-								if (selectionLength == 0) {
-									jcomp.selectAll();
-								} else {
-									int lastPos = jcomp.getSelectionEnd();
-									jcomp.setSelectionStart(0);
-									jcomp.setSelectionEnd(0);
-									jcomp.setCaretPosition(lastPos);
-								}
-							}
-						});
-					}
-				});
+        this.jcomp.getActionMap().put("flipTextSelection", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(() -> {
+                    int selectionLength = jcomp.getSelectionEnd() - jcomp.getSelectionStart();
+                    if (selectionLength == 0) {
+                        jcomp.selectAll();
+                    } else {
+                        int lastPos = jcomp.getSelectionEnd();
+                        jcomp.setSelectionStart(0);
+                        jcomp.setSelectionEnd(0);
+                        jcomp.setCaretPosition(lastPos);
+                    }
+                });
+            }
+        });
 
-		SwingUtilities.replaceUIInputMap(this.jcomp, JComponent.WHEN_FOCUSED,
-				newMap);
-	}
+        SwingUtilities.replaceUIInputMap(this.jcomp, JComponent.WHEN_FOCUSED, newMap);
+    }
 
-	private void uninstallTracking() {
-		InputMap currMap = SwingUtilities.getUIInputMap(this.jcomp,
-				JComponent.WHEN_FOCUSED);
-		if (currMap != null) {
-			InputMap newMap = new InputMap();
-			KeyStroke[] kss = currMap.allKeys();
-			for (int i = 0; i < kss.length; i++) {
-				KeyStroke stroke = kss[i];
-				Object val = currMap.get(stroke);
-				if (stroke
-						.equals(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0))
-						&& "flipTextSelection".equals(val)) {
-					continue;
-				}
-				newMap.put(stroke, val);
-			}
-			SwingUtilities.replaceUIInputMap(this.jcomp,
-					JComponent.WHEN_FOCUSED, newMap);
-		}
-		this.jcomp.getActionMap().remove("flipTextSelection");
-	}
+    private void uninstallTracking() {
+        InputMap currMap = SwingUtilities.getUIInputMap(this.jcomp, JComponent.WHEN_FOCUSED);
+        if (currMap != null) {
+            InputMap newMap = new InputMap();
+            KeyStroke[] kss = currMap.allKeys();
+            for (int i = 0; i < kss.length; i++) {
+                KeyStroke stroke = kss[i];
+                Object val = currMap.get(stroke);
+                if (stroke.equals(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0))
+                        && "flipTextSelection".equals(val)) {
+                    continue;
+                }
+                newMap.put(stroke, val);
+            }
+            SwingUtilities.replaceUIInputMap(this.jcomp, JComponent.WHEN_FOCUSED, newMap);
+        }
+        this.jcomp.getActionMap().remove("flipTextSelection");
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.pushingpixels.lafwidget.LafWidgetAdapter#installListeners()
-	 */
-	@Override
-	public void installListeners() {
-		this.propertyChangeListener = new PropertyChangeListener() {
-			@Override
-			public void propertyChange(PropertyChangeEvent evt) {
-				if (LafWidget.TEXT_FLIP_SELECT_ON_ESCAPE.equals(evt
-						.getPropertyName())) {
-					boolean hasTextFlipSelection = LafWidgetUtilities
-							.hasTextFlipSelectOnEscapeProperty(jcomp);
-					if (hasTextFlipSelection) {
-						// change the input map
-						installTracking();
-					} else {
-						// remove the input map
-						uninstallTracking();
-					}
-				}
-			}
-		};
-		this.jcomp.addPropertyChangeListener(this.propertyChangeListener);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.pushingpixels.lafwidget.LafWidgetAdapter#installListeners()
+     */
+    @Override
+    public void installListeners() {
+        this.propertyChangeListener = new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (LafWidget.TEXT_FLIP_SELECT_ON_ESCAPE.equals(evt.getPropertyName())) {
+                    boolean hasTextFlipSelection = LafWidgetUtilities
+                            .hasTextFlipSelectOnEscapeProperty(jcomp);
+                    if (hasTextFlipSelection) {
+                        // change the input map
+                        installTracking();
+                    } else {
+                        // remove the input map
+                        uninstallTracking();
+                    }
+                }
+            }
+        };
+        this.jcomp.addPropertyChangeListener(this.propertyChangeListener);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.pushingpixels.lafwidget.LafWidgetAdapter#uninstallListeners()
-	 */
-	@Override
-	public void uninstallListeners() {
-		this.jcomp.removePropertyChangeListener(this.propertyChangeListener);
-		this.propertyChangeListener = null;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.pushingpixels.lafwidget.LafWidgetAdapter#uninstallListeners()
+     */
+    @Override
+    public void uninstallListeners() {
+        this.jcomp.removePropertyChangeListener(this.propertyChangeListener);
+        this.propertyChangeListener = null;
+    }
 }
