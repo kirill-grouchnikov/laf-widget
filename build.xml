@@ -47,7 +47,7 @@
 	<property name="laf-widget.drop.dir" value="${module.laf-widget.basedir}/drop" />
 	<property name="laf-widget.lib.dir" value="${module.laf-widget.basedir}/lib" />
 	<property name="laf-widget.src.dir" value="${module.laf-widget.basedir}/src/" />
-	<property name="laf-widget.version" value="5.2dev Orchid" />
+	<property name="laf-widget.version" value="5.2final Orchid" />
 
 	<path id="laf-widget.module.bootclasspath">
 		<!-- Paths to be included in compilation bootclasspath -->
@@ -59,7 +59,7 @@
 	<path id="laf-widget.module.classpath">
 		<path refid="${module.jdk.classpath.laf-widget}" />
 		<pathelement location="${laf-widget.lib.dir}/ant.jar" />
-		<pathelement location="${laf-widget.lib.dir}/trident.jar" />
+		<pathelement location="${laf-widget.lib.dir}/trident-1.4.jar" />
 	</path>
 
 	<patternset id="excluded.from.module.laf-widget" />
