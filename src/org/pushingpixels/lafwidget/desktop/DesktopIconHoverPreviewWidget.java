@@ -96,7 +96,7 @@ public class DesktopIconHoverPreviewWidget extends LafWidgetAdapter<JDesktopIcon
 				return;
 			BufferedImage previewImage = snapshot;
 			if (previewImage != null) {
-				int scaleFactor = UIUtil.isRetina() ? 2 : 1;
+				int scaleFactor = UIUtil.getScaleFactor();
 				DesktopIconHoverPreviewWidget.this.previewWindow.getContentPane().removeAll();
 				JLabel previewLabel = new JLabel(new HiDpiAwareIcon(previewImage));
 				DesktopIconHoverPreviewWidget.this.previewWindow.getContentPane().add(previewLabel,

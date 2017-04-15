@@ -122,7 +122,7 @@ public class LafWidgetUtilities {
 		int width = image.getWidth();
 		BufferedImage thumb = image;
 
-		int scaleFactor = UIUtil.isRetina() ? 2 : 1;
+		int scaleFactor = UIUtil.getScaleFactor();
 		do {
 			width /= 2;
 			if (width < requestedThumbWidth) {

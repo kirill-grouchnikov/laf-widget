@@ -9,3 +9,6 @@
 4.2 - Knotweed
 4.3 - Larkspur
 5.0 - Magnolia
+5.1 - Nightshade
+5.2 - Orchid
+5.3 - Periwinkle

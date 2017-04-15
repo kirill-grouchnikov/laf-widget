@@ -91,7 +91,7 @@ public class DefaultTabPreviewPainter extends TabPreviewPainter {
 			// fix for issue 177 in Substance - disabled tabs painted in
 			// 50% opacity.
 			Graphics2D g2 = (Graphics2D) bufferedImage.createGraphics();
-			int scaleFactor = UIUtil.isRetina() ? 2 : 1;
+			int scaleFactor = UIUtil.getScaleFactor();
 			if (!tabPane.isEnabledAt(tabIndex)) {
 				g2.setComposite(AlphaComposite.getInstance(
 						AlphaComposite.SRC_OVER, 0.5f));

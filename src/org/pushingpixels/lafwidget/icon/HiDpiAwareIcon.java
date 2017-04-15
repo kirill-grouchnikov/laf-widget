@@ -54,7 +54,7 @@ public class HiDpiAwareIcon implements Icon, IsHiDpiAware {
 	
 	public HiDpiAwareIcon(BufferedImage image) {
 		this.imageSource = image;
-		this.factor = UIUtil.isRetina() ? 2 : 1;
+		this.factor = UIUtil.getScaleFactor();
 		this.isHiDpiAwareSource = image instanceof JBHiDPIScaledImage;
 		this.width = getInternalWidth();
 		this.height = getInternalHeight();
@@ -62,7 +62,7 @@ public class HiDpiAwareIcon implements Icon, IsHiDpiAware {
 	
 	public HiDpiAwareIcon(Icon icon) {
 		this.iconSource = icon;
-		this.factor = UIUtil.isRetina() ? 2 : 1;
+		this.factor = UIUtil.getScaleFactor();
 		this.isHiDpiAwareSource = (icon instanceof IsHiDpiAware) && 
 				((IsHiDpiAware) icon).isHiDpiAware();
 		this.width = getInternalWidth();

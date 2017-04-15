@@ -96,7 +96,7 @@ public class TabPreviewControl extends JPanel {
 			int w = this.previewImagePanel.getWidth();
 			int h = this.previewImagePanel.getHeight();
 
-			int scaleFactor = UIUtil.isRetina() ? 2 : 1;
+			int scaleFactor = UIUtil.getScaleFactor();
 			Graphics2D g2 = (Graphics2D) g.create();
 			g2.setComposite(AlphaComposite.SrcOver.derive(alpha));
 			int dx = (w - pw / scaleFactor) / 2;

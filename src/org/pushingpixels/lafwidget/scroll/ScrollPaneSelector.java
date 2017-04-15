@@ -205,7 +205,7 @@ public class ScrollPaneSelector extends JComponent {
 		if (theImage == null || theRectangle == null)
 			return new Dimension();
 		Insets insets = getInsets();
-		int scaleFactor = UIUtil.isRetina() ? 2 : 1;
+		int scaleFactor = UIUtil.getScaleFactor();
 		return new Dimension(
 				theImage.getWidth() / scaleFactor + insets.left + insets.right, 
 				theImage.getHeight() / scaleFactor + insets.top + insets.bottom);
@@ -222,7 +222,7 @@ public class ScrollPaneSelector extends JComponent {
 		int yOffset = insets.top;
 		int availableWidth = getWidth() - insets.left - insets.right;
 		int availableHeight = getHeight() - insets.top - insets.bottom;
-		int scaleFactor = UIUtil.isRetina() ? 2 : 1;
+		int scaleFactor = UIUtil.getScaleFactor();
 		g.drawImage(theImage, xOffset, yOffset, theImage.getWidth() / scaleFactor,
 				theImage.getHeight() / scaleFactor, null);
 

@@ -159,4 +159,8 @@ public class UIUtil {
 		cachedRetinaReply = Boolean.valueOf(result);
 		return cachedRetinaReply;
 	}
+	
+	public static int getScaleFactor() {
+	    return isRetina() ? 2 : 1;
+	}
 }
