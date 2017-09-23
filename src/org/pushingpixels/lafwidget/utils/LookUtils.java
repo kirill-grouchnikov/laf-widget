@@ -51,6 +51,8 @@ public final class LookUtils {
 	 * access to read this property or the property does not exist.
 	 */
 	private static final String JAVA_VENDOR = getSystemProperty("java.vendor");
+	
+	private static final String JAVA_SPEC_VERSION = getSystemProperty("java.specification.version");
 
 	/**
 	 * The <code>os.name</code> System Property. Operating system name.
@@ -173,7 +175,7 @@ public final class LookUtils {
 			&& startsWith(OS_VERSION, "10.10");
 
 	/**
-	 * True if this is Mac El Capitan or later
+	 * True if this is Mac El Capitan or later (Sierra for now)
 	 */
 	public static final boolean IS_OS_MAC_EL_CAPITAN_OR_LATER = IS_OS_MAC 
 			&& (startsWith(OS_VERSION, "10.11") || startsWith(OS_VERSION, "10.12"));
@@ -184,6 +186,8 @@ public final class LookUtils {
 	public static final boolean IS_OS_SOLARIS = startsWith(OS_NAME, "Solaris");
 	
 	public static final boolean IS_VENDOR_APPLE = containsIgnoreCase(JAVA_VENDOR, "Apple");
+	
+	public static final boolean IS_JAVA_9 = startsWith(JAVA_SPEC_VERSION, "9");
 
 	// Other Properties *******************************************************
 

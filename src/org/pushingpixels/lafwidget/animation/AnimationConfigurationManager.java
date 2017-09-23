@@ -37,7 +37,19 @@ import org.pushingpixels.trident.ease.Spline;
 import org.pushingpixels.trident.ease.TimelineEase;
 
 /**
- * Animation configuration manager.
+ * Animation configuration manager. Note that while this class provides a variety of ways
+ * to enable / disable animations on specific components and component classes, most of the core
+ * animations on simple controls can not be turned off. 
+ * 
+ * Specifically, you have fine-grained controls over two classes of animations:
+ * 
+ * <ol>
+ * <li>Renderer-based controls such as tables, trees and lists</li>
+ * <li>Custom animations that Substance adds such as focus loop, icon glow etc</li>
+ * </ol>
+ * 
+ * Other, simpler animations such as rolling over a button can not be turned off with the APIs in
+ * this class.
  * 
  * @author Kirill Grouchnikov
  * @since 2.1
