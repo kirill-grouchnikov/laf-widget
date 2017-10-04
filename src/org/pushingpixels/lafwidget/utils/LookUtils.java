@@ -175,10 +175,11 @@ public final class LookUtils {
 			&& startsWith(OS_VERSION, "10.10");
 
 	/**
-	 * True if this is Mac El Capitan or later (Sierra for now)
+	 * True if this is Mac El Capitan or later (Sierra + High Sierra for now)
 	 */
 	public static final boolean IS_OS_MAC_EL_CAPITAN_OR_LATER = IS_OS_MAC 
-			&& (startsWith(OS_VERSION, "10.11") || startsWith(OS_VERSION, "10.12"));
+			&& (startsWith(OS_VERSION, "10.11") || startsWith(OS_VERSION, "10.12")
+			 || startsWith(OS_VERSION, "10.13"));
 
 	/**
 	 * True if this is Solaris.
