@@ -47,7 +47,7 @@
 	<property name="laf-widget.drop.dir" value="${module.laf-widget.basedir}/drop" />
 	<property name="laf-widget.lib.dir" value="${module.laf-widget.basedir}/lib" />
 	<property name="laf-widget.src.dir" value="${module.laf-widget.basedir}/src/" />
-	<property name="laf-widget.version" value="5.3rc Periwinkle" />
+	<property name="laf-widget.version" value="5.3final Periwinkle" />
 
 	<path id="laf-widget.module.bootclasspath">
 		<!-- Paths to be included in compilation bootclasspath -->
