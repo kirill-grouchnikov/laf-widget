@@ -45,11 +45,11 @@ import javax.swing.text.JTextComponent;
 
 import org.pushingpixels.lafwidget.LafWidgetAdapter;
 import org.pushingpixels.lafwidget.LafWidgetUtilities;
-import org.pushingpixels.lafwidget.text.svg.Edit_copy;
-import org.pushingpixels.lafwidget.text.svg.Edit_cut;
-import org.pushingpixels.lafwidget.text.svg.Edit_delete_2;
-import org.pushingpixels.lafwidget.text.svg.Edit_paste;
-import org.pushingpixels.lafwidget.text.svg.Edit_select_all;
+import org.pushingpixels.lafwidget.text.svg.ic_content_copy_black_24px;
+import org.pushingpixels.lafwidget.text.svg.ic_content_cut_black_24px;
+import org.pushingpixels.lafwidget.text.svg.ic_content_paste_black_24px;
+import org.pushingpixels.lafwidget.text.svg.ic_delete_black_24px;
+import org.pushingpixels.lafwidget.text.svg.ic_select_all_black_24px;
 
 /**
  * Adds edit context menu on text components.
@@ -61,6 +61,8 @@ public class EditContextMenuWidget extends LafWidgetAdapter<JTextComponent> {
 	 * Mouse listener for showing the edit context menu.
 	 */
 	protected MouseListener menuMouseListener;
+	
+	private static final int ICON_SIZE = 14;
 
 	/*
 	 * (non-Javadoc)
@@ -136,7 +138,8 @@ public class EditContextMenuWidget extends LafWidgetAdapter<JTextComponent> {
 		 * Creates new <code>Paste</code> action.
 		 */
 		public PasteAction() {
-			super(LafWidgetUtilities.getResourceBundle(jcomp).getString("EditMenu.paste"), Edit_paste.of(16, 16));
+			super(LafWidgetUtilities.getResourceBundle(jcomp).getString("EditMenu.paste"), 
+			        ic_content_paste_black_24px.of(ICON_SIZE, ICON_SIZE));
 		}
 
 		/*
@@ -175,7 +178,7 @@ public class EditContextMenuWidget extends LafWidgetAdapter<JTextComponent> {
 		 */
 		public SelectAllAction() {
 			super(LafWidgetUtilities.getResourceBundle(jcomp).getString("EditMenu.selectAll"),
-					Edit_select_all.of(16, 16));
+					ic_select_all_black_24px.of(ICON_SIZE, ICON_SIZE));
 		}
 
 		/*
@@ -210,7 +213,7 @@ public class EditContextMenuWidget extends LafWidgetAdapter<JTextComponent> {
 		 */
 		public DeleteAction() {
 			super(LafWidgetUtilities.getResourceBundle(jcomp).getString("EditMenu.delete"),
-					Edit_delete_2.of(16, 16));
+					ic_delete_black_24px.of(ICON_SIZE, ICON_SIZE));
 		}
 
 		/*
@@ -245,7 +248,7 @@ public class EditContextMenuWidget extends LafWidgetAdapter<JTextComponent> {
 		 */
 		public CutAction() {
 			super(LafWidgetUtilities.getResourceBundle(jcomp).getString("EditMenu.cut"),
-					Edit_cut.of(16, 16));
+					ic_content_cut_black_24px.of(ICON_SIZE, ICON_SIZE));
 		}
 
 		/*
@@ -280,7 +283,7 @@ public class EditContextMenuWidget extends LafWidgetAdapter<JTextComponent> {
 		 */
 		public CopyAction() {
 			super(LafWidgetUtilities.getResourceBundle(jcomp).getString("EditMenu.copy"),
-					Edit_copy.of(16, 16));
+					ic_content_copy_black_24px.of(ICON_SIZE, ICON_SIZE));
 		}
 
 		/*
